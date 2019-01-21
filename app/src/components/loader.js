@@ -36,8 +36,8 @@ class LoadWrapper extends Component {
     return (
       this.props.web3Ready &&
       this.props.networkReady &&
-      this.props.accountsReady &&
-      this.props.contractsReady
+      (this.props.accountsReady || this.props.skipAccounts) &&
+      (this.props.contractsReady || this.props.skipContracts)
     );
   }
 
@@ -51,7 +51,7 @@ class LoadWrapper extends Component {
             {!this.props.showTip ? (
               <div>
                 <div className="spinner" />
-                <label>loading...</label>
+                <p>loading...</p>
               </div>
             ) : (
               <div>

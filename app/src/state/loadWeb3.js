@@ -50,7 +50,9 @@ export async function loadWeb3() {
           }
         });
       } else {
-        console.log('unhandled account update', data);
+        store.dispatch({
+          type: 'ACCOUNT_LOGOUT'
+        });
       }
     });
 

@@ -3,14 +3,8 @@ import { connect } from 'react-redux';
 
 import Loader from 'components/loader';
 
-// Fonts
-import './css/averta.css';
+// CSS
 import './css/open-sans.css';
-
-// Pure css
-import './css/pure-min.css';
-
-// App css
 import './index.css';
 
 class App extends Component {
@@ -19,24 +13,42 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>web3 App</h1>
+        <h1>Servesa Web3 App</h1>
 
-        <h2>Client</h2>
+        <h2>Redux stores</h2>
 
-        <h3>Redux stores</h3>
-        <p>state.web3</p>
-        <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
+        <div className="row row-3">
+          <div>
+            <p>state.web3</p>
+            <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
+          </div>
+          <div>
+            <p>state.contracts</p>
+            <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
+          </div>
+          <div>
+            {' '}
+            <p>state.account</p>
+            <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
+          </div>
+        </div>
 
-        <p>state.contracts</p>
-        <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
+        <h2>Loader States</h2>
 
-        <p>state.account</p>
-        <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
-
-        <h3>Loader States</h3>
-        <Loader>
-          <p>Loaded!</p>
-        </Loader>
+        <div className="row row-2">
+          <div>
+            <p>Require web3, contracts, and account </p>
+            <Loader>
+              <p>Content Loaded!</p>
+            </Loader>
+          </div>
+          <div>
+            <p>Require web3 & contracts</p>
+            <Loader skipAccounts={true}>
+              <p>Content Loaded!</p>
+            </Loader>
+          </div>
+        </div>
       </div>
     );
   }

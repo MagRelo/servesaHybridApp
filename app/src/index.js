@@ -4,8 +4,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
-import { loadWeb3 } from 'utils/loadWeb3';
-import { loadContracts } from 'utils/loadContracts';
+import { loadWeb3 } from 'state/loadWeb3';
+import { loadContracts } from 'state/loadContracts';
 
 // redux stote
 import store from 'state/store';

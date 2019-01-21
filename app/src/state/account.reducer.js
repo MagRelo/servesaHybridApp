@@ -21,6 +21,15 @@ const AccountReducer = (state = initialState, action) => {
     });
   }
 
+  if (action.type === 'ACCOUNT_LOGOUT') {
+    return Object.assign({}, state, {
+      accountsReady: false,
+      currentAccount: '',
+      accounts: [],
+      balance: 0
+    });
+  }
+
   return state;
 };
 

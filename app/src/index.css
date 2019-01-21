@@ -36,3 +36,10 @@ pre {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
+
+.loader {
+  text-align: center;
+  border: solid 1px gray;
+  padding: 1em;
+  background-color: #dddddd;
+}
