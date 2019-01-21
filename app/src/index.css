@@ -10,3 +10,29 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+pre {
+  padding: 1rem;
+  background-color: #dddddd;
+}
+
+.row {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-gap: 1em;
+}
+
+.row-2,
+.row-3 {
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 992px) {
+  .row-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .row-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

@@ -49,6 +49,8 @@ export async function loadWeb3() {
             currentAccount: data.selectedAddress
           }
         });
+      } else {
+        console.log('unhandled account update', data);
       }
     });
 

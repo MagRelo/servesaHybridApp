@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Loader from 'loader';
+import Loader from 'components/loader';
 
 // Fonts
 import './css/averta.css';
@@ -23,16 +23,17 @@ class App extends Component {
 
         <h2>Client</h2>
 
-        <h3>Web3 Reducer</h3>
+        <h3>Redux stores</h3>
+        <p>state.web3</p>
         <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
 
-        <p>Account Reducer</p>
-        <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
-
-        <p>Contracts Reducer</p>
+        <p>state.contracts</p>
         <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
 
-        <p>Loader</p>
+        <p>state.account</p>
+        <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
+
+        <h3>Loader States</h3>
         <Loader>
           <p>Loaded!</p>
         </Loader>
@@ -45,20 +46,22 @@ const mapStateToProps = state => {
   return {
     web3: {
       web3Ready: state.web3.web3Ready,
+      instance: typeof state.web3.instance,
       networkReady: state.web3.networkReady,
       network: state.web3.network,
       networkID: state.web3.networkID
     },
+
     account: {
-      accounts: state.account.accounts,
+      accountsReady: state.account.accountsReady,
       currentAccount: state.account.currentAccount,
       balance: state.account.balance,
-      accountsReady: state.account.accountsReady
+      accounts: state.account.accounts
     },
 
     contracts: {
       contractsReady: state.contracts.contractsReady,
-      bouncerLoaded: !!state.contracts.bouncer
+      bouncerProxy: typeof state.contracts.bouncerProxy
     },
 
     showTip: state.web3.showTip
