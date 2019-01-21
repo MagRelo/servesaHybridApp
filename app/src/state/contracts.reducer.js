@@ -1,5 +1,6 @@
 const initialState = {
-  bouncer: null
+  bouncer: null,
+  contractsReady: false
 };
 
 const AccountReducer = (state = initialState, action) => {

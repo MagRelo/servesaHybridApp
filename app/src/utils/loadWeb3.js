@@ -40,6 +40,18 @@ export async function loadWeb3() {
       return console.log('no web3 connection!');
     }
 
+    // watch changes to current account
+    web3.currentProvider.publicConfigStore.on('update', data => {
+      if (data.selectedAddress) {
+        store.dispatch({
+          type: 'ACCOUNT_CHANGE',
+          payload: {
+            currentAccount: data.selectedAddress
+          }
+        });
+      }
+    });
+
     // set network
     let networkId = await web3.eth.net.getId();
     let network = 'unknown';

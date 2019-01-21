@@ -10,17 +10,21 @@ export async function loadContracts() {
       const web3 = store.getState().web3.instance;
       const networkID = store.getState().web3.networkID;
 
-      const BouncerProxyContract = await new web3.eth.Contract(
-        BouncerProxy.abi,
-        BouncerProxy.networks[networkID].address
-      );
+      //
+      const isDeployedOnNetwork = !!BouncerProxy.networks[networkID];
+      if (isDeployedOnNetwork) {
+        const BouncerProxyContract = await new web3.eth.Contract(
+          BouncerProxy.abi,
+          BouncerProxy.networks[networkID].address
+        );
 
-      store.dispatch({
-        type: 'CONTRACTS_INITIALIZED',
-        payload: {
-          bouncer: BouncerProxyContract
-        }
-      });
+        store.dispatch({
+          type: 'CONTRACTS_INITIALIZED',
+          payload: {
+            bouncer: BouncerProxyContract
+          }
+        });
+      }
 
       return unsubscribe();
     }

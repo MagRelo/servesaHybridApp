@@ -15,6 +15,12 @@ const AccountReducer = (state = initialState, action) => {
     });
   }
 
+  if (action.type === 'ACCOUNT_CHANGE') {
+    return Object.assign({}, state, {
+      currentAccount: action.payload.currentAccount
+    });
+  }
+
   return state;
 };
 
