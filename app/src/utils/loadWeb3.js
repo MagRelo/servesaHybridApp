@@ -59,9 +59,6 @@ export async function loadWeb3() {
       case '42':
         network = 'kovan';
         break;
-      case '654321':
-        network = 'pragma-testnet';
-        break;
       default:
         network = 'unknown (local?)';
     }
@@ -78,6 +75,7 @@ export async function loadWeb3() {
       payload: {
         instance: web3,
         network: network,
+        networkID: networkId,
         accounts: accounts,
         balance: balance
       }

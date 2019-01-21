@@ -4,9 +4,13 @@ import thunkMiddleware from 'redux-thunk';
 import { combineReducers } from 'redux';
 
 import web3 from 'state/web3.reducer';
+import account from 'state/account.reducer';
+import contracts from 'state/contracts.reducer';
 
 const reducer = combineReducers({
-  web3: web3
+  web3,
+  account,
+  contracts
 });
 
 // Redux DevTools

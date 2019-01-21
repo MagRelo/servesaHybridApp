@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 
 import Loader from 'loader';
 
+// Fonts
+import './css/averta.css';
+import './css/open-sans.css';
+
+// Pure css
+import './css/pure-min.css';
 import './App.css';
 
 class App extends Component {
   state = { accounts: null };
-
-  componentDidMount = async () => {};
 
   render() {
     return (
@@ -16,12 +20,17 @@ class App extends Component {
         <h1>web3 App</h1>
 
         <h2>Client</h2>
-        <p>Component State</p>
-        <pre>{JSON.stringify(this.state, null, 2)}</pre>
 
         <p>Web3 Reducer</p>
-        <pre>{JSON.stringify(this.props, null, 2)}</pre>
+        <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
 
+        <p>Account Reducer</p>
+        <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
+
+        <p>Contracts Reducer</p>
+        <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
+
+        <p>Loader</p>
         <Loader>
           <p>Loaded!</p>
         </Loader>
@@ -32,17 +41,25 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3Ready: state.web3.web3Ready,
-    accountsReady: state.web3.accountsReady,
+    web3: {
+      web3Ready: state.web3.web3Ready,
+      networkReady: state.web3.networkReady,
+      network: state.web3.network,
+      networkID: state.web3.networkID
+    },
+    account: {
+      accounts: state.account.accounts,
+      currentAccount: state.account.currentAccount,
+      balance: state.account.balance,
+      accountsReady: state.account.accountsReady
+    },
 
-    contractsReady: state.web3.contractsReady,
-    networkReady: state.web3.networkReady,
+    contracts: {
+      contractsReady: state.contracts.contractsReady,
+      bouncerLoaded: !!state.contracts.bouncer
+    },
 
-    showTip: state.web3.showTip,
-
-    network: state.web3.network,
-    accounts: state.web3.accounts,
-    balance: state.web3.balance
+    showTip: state.web3.showTip
   };
 };
 

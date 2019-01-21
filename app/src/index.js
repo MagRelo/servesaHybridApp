@@ -5,7 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 
-import { loadWeb3 } from 'utils/web3';
+import { loadWeb3 } from 'utils/loadWeb3';
+import { loadContracts } from 'utils/loadContracts';
 
 // redux stote
 import store from 'state/store';
@@ -17,6 +18,7 @@ import store from 'state/store';
 // serviceWorker.unregister();
 
 loadWeb3();
+loadContracts();
 
 ReactDOM.render(
   <Provider store={store}>

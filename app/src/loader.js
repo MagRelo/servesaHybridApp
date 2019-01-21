@@ -74,10 +74,10 @@ class LoadWrapper extends Component {
 const mapStateToProps = state => {
   return {
     web3Ready: state.web3.web3Ready,
-    accountsReady: state.web3.accountsReady,
-    contractsReady: state.web3.contractsReady,
     networkReady: state.web3.networkReady,
-    showTip: state.web3.showTip
+    showTip: state.web3.showTip,
+    accountsReady: state.account.accountsReady,
+    contractsReady: state.contracts.contractsReady
   };
 };
 

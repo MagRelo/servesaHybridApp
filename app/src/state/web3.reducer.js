@@ -4,11 +4,6 @@ const initialState = {
   networkReady: false,
   network: '',
 
-  accountsReady: false,
-  accounts: [],
-  currentAccount: '',
-  balance: 0,
-
   contractsReady: false,
   contractDataReady: false,
 
@@ -21,10 +16,8 @@ const web3Reducer = (state = initialState, action) => {
       web3Ready: true,
       instance: action.payload.instance,
       network: action.payload.network,
-      balance: action.payload.balance,
       networkReady: !!action.payload.network,
-      accounts: action.payload.accounts,
-      accountsReady: !!action.payload.accounts.length
+      networkID: action.payload.networkID
     });
   }
 

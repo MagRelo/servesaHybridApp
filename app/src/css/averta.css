@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'AvertaStdPE-Semibold';
+  src: url('../fonts/Averta/37D8D7_C_0.eot');
+  src: url('../fonts/Averta/37D8D7_C_0.eot?#iefix') format('embedded-opentype'), url('../fonts/Averta/37D8D7_C_0.woff2') format('woff2'), url('../fonts/Averta/37D8D7_C_0.woff') format('woff'), url('../fonts/Averta/37D8D7_C_0.ttf') format('truetype');
+}
+
+
+@font-face {
+  font-family: 'AvertaStdPE-Regular';
+  src: url('../fonts/Averta/37D8D7_A_0.eot');
+  src: url('../fonts/Averta/37D8D7_A_0.eot?#iefix') format('embedded-opentype'), url('../fonts/Averta/37D8D7_A_0.woff2') format('woff2'), url('../fonts/Averta/37D8D7_A_0.woff') format('woff'), url('../fonts/Averta/37D8D7_A_0.ttf') format('truetype');
+}
