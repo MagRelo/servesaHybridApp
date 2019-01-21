@@ -9,7 +9,9 @@ import './css/open-sans.css';
 
 // Pure css
 import './css/pure-min.css';
-import './App.css';
+
+// App css
+import './index.css';
 
 class App extends Component {
   state = { accounts: null };
@@ -21,7 +23,7 @@ class App extends Component {
 
         <h2>Client</h2>
 
-        <p>Web3 Reducer</p>
+        <h3>Web3 Reducer</h3>
         <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
 
         <p>Account Reducer</p>

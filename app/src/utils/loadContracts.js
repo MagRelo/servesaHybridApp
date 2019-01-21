@@ -21,7 +21,8 @@ export async function loadContracts() {
         store.dispatch({
           type: 'CONTRACTS_INITIALIZED',
           payload: {
-            bouncer: BouncerProxyContract
+            bouncer: BouncerProxyContract,
+            contractsReady: true
           }
         });
       }
