@@ -47,11 +47,15 @@ class LoadWrapper extends Component {
         {this.showChildren() ? (
           { ...this.props.children }
         ) : (
-          <div className="loader">
+          <div className="loader" style={{ minHeight: '150px' }}>
             {!this.props.showTip ? (
               <div>
-                <div className="spinner" />
-                <p>loading...</p>
+                <div className="spinner">
+                  <div className="bounce1" />
+                  <div className="bounce2" />
+                  <div className="bounce3" />
+                </div>
+                <p>web3 loading...</p>
               </div>
             ) : (
               <div>

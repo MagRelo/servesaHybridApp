@@ -111,5 +111,5 @@ export async function startTipTimer() {
     });
 
     clearTimeout(timer);
-  }, 4000);
+  }, 3000);
 }
