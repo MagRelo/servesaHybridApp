@@ -9,6 +9,38 @@ import './css/open-sans.css';
 import './css/pure-min.css';
 import './index.css';
 
+const signatureAuthSample = `function signatureAuth(req, res, next) {
+  // check for header
+  if (!req.headers['x-servesa']) {
+    return res.status(401).send([]);
+  }
+
+  // parse header object
+  const authObject = JSON.parse(req.headers['x-servesa']);
+  if (!authObject.message || !authObject.signature) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  // recover public key
+  const userAddress = sigUtil.recoverPersonalSignature({
+    data: authObject.message,
+    sig: authObject.signature
+  });
+
+  // parse message
+  const message = JSON.parse(
+    ethUtil.toBuffer(authObject.message).toString('utf8')
+  );
+
+  // pass along userAddress and message
+  req.userAddress = userAddress;
+  req.userMessage = message;
+
+  // call next middleware function
+  next();
+}
+`;
+
 class App extends Component {
   state = { accounts: null };
 
@@ -17,13 +49,23 @@ class App extends Component {
       <div className="App">
         <h1>Servesa Truffle Box</h1>
 
+        <h2>Contracts</h2>
+
         <ul>
-          <li>Client</li>
-          <li>Server</li>
-          <li>Contracts</li>
+          <li>BouncerProxy: submit transactions on behalf of your users.</li>
+          <li>SimpleStorage: simple storage contract to test BouncerProxy</li>
         </ul>
 
-        <h2>Client</h2>
+        <h2>Server features </h2>
+
+        <ul>
+          <li>HTTP & WebSocket API</li>
+          <li>Authentication middleware using digital signatures</li>
+          <li>Watch and save contract events</li>
+          <li>Submit Eth transactions from server</li>
+        </ul>
+
+        <h2>Client features </h2>
         <div className="row row-3">
           <div>
             <h3>Redux stores</h3>

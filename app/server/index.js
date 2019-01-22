@@ -95,16 +95,16 @@ server.listen(8080, () => {
 // helpers
 // *
 
-function servesaAuth(req, res, next) {
+function signatureAuth(req, res, next) {
   // check for header
   if (!req.headers['x-servesa']) {
-    return res.status(401).send([]);
+    return res.status(401).send('Unauthorized');
   }
 
   // parse header object
   const authObject = JSON.parse(req.headers['x-servesa']);
   if (!authObject.message || !authObject.signature) {
-    return res.status(401).send([]);
+    return res.status(401).send('Unauthorized');
   }
 
   // recover public key
@@ -113,7 +113,7 @@ function servesaAuth(req, res, next) {
     sig: authObject.signature
   });
 
-  // parse message & check timestamp for expiration
+  // parse message
   const message = JSON.parse(
     ethUtil.toBuffer(authObject.message).toString('utf8')
   );
