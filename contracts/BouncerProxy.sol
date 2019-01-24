@@ -57,17 +57,24 @@ contract BouncerProxy {
   // allow for third party metatx account to make transactions through this
   // contract like an identity but make sure the owner has whitelisted the tx
   mapping(address => bool) public whitelist;
+
+
+
   function updateWhitelist(address _account, bool _value) public returns(bool) {
    require(whitelist[msg.sender],"BouncerProxy::updateWhitelist Account Not Whitelisted");
    whitelist[_account] = _value;
    emit UpdateWhitelist(_account,_value);
    return true;
   }
+
   event UpdateWhitelist(address _account, bool _value);
   // copied from https://github.com/uport-project/uport-identity/blob/develop/contracts/Proxy.sol
+  
+  
   function () external payable { emit Received(msg.sender, msg.value); }
   event Received (address indexed sender, uint value);
 
+  
   function getHash(address signer, address destination, uint value, bytes memory data, address rewardToken, uint rewardAmount) public view returns(bytes32){
     return keccak256(abi.encodePacked(address(this), signer, destination, value, data, rewardToken, rewardAmount, nonce[signer]));
   }

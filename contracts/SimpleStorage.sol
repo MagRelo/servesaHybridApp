@@ -1,13 +1,12 @@
 pragma solidity ^0.5.0;
 
 contract SimpleStorage {
-  uint storedData;
+  address public lastUpdatedBy;
+  uint256 public value;
 
-  function set(uint x) public {
-    storedData = x;
+  function saveSender(uint256  _value) public {
+    lastUpdatedBy = msg.sender;
+    value = _value;  
   }
 
-  function get() public view returns (uint) {
-    return storedData;
-  }
 }
