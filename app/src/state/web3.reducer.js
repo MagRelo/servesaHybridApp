@@ -3,10 +3,6 @@ const initialState = {
   instance: null,
   networkReady: false,
   network: '',
-
-  contractsReady: false,
-  contractDataReady: false,
-
   showTip: false
 };
 
@@ -18,21 +14,6 @@ const web3Reducer = (state = initialState, action) => {
       network: action.payload.network,
       networkReady: !!action.payload.network,
       networkID: action.payload.networkID
-    });
-  }
-
-  if (action.type === 'UPDATE_DATA') {
-    return Object.assign(
-      {},
-      state,
-      { contractDataReady: true },
-      action.payload.contracts
-    );
-  }
-
-  if (action.type === 'CONTRACTS_INITIALIZED') {
-    return Object.assign({}, state, {
-      contractsReady: true
     });
   }
 

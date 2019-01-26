@@ -26,7 +26,6 @@ class LoadWrapper extends Component {
       }
     ],
     contractValue: 0,
-    selectedAccount: '',
     whitelistStatus: false,
     inputs: [],
     targetAmount: 0,
@@ -35,16 +34,24 @@ class LoadWrapper extends Component {
     bouncerAddress: ''
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.getWhitelistStatus();
+  }
+  componentDidUpdate(oldProps) {
+    if (oldProps.selectedAccount !== this.props.selectedAccount) {
+      this.getWhitelistStatus();
+    }
+  }
+
+  async getWhitelistStatus() {
     const bouncerProxyInstance = store.getState().contracts.bouncerProxy;
-    const selectedAccount = store.getState().account.selectedAccount;
 
     const status = await bouncerProxyInstance.methods
-      .whitelist(selectedAccount)
-      .call({ from: selectedAccount });
+      .whitelist(this.props.selectedAccount)
+      .call({ from: this.props.selectedAccount });
 
+    console.log('updated status');
     this.setState({
-      selectedAccount: selectedAccount,
       whitelistStatus: status,
       whitelistStatus_display: status ? 'Approved' : 'Not Approved',
       bouncerAddress: bouncerProxyInstance._address
@@ -226,7 +233,7 @@ class LoadWrapper extends Component {
 
         <p>Account Status</p>
         <fieldset style={{ padding: '0 1em', fontSize: 'smaller' }}>
-          <p>Account: {this.state.selectedAccount}</p>
+          <p>Account: {this.props.selectedAccount}</p>
           <p>Whitelist Status: {this.state.whitelistStatus_display}</p>
         </fieldset>
 
@@ -287,6 +294,7 @@ const mapStateToProps = state => {
     networkReady: state.web3.networkReady,
     showTip: state.web3.showTip,
     accountsReady: state.account.accountsReady,
+    selectedAccount: state.account.selectedAccount,
     contractsReady: state.contracts.contractsReady,
     contractList: state.contracts.contractList
   };
