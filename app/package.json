@@ -2,6 +2,7 @@
   "name": "media-ticket",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "dotenv": "^6.2.0",
     "eth-sig-util": "^2.1.0",

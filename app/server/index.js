@@ -76,6 +76,11 @@ app.use(
 
 // http routing
 // serve the frontend for all non-api requests
+
+app.post('/api/bouncer', function(req, res) {
+  res.status(200).send('done');
+});
+
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root: './build_client' });
 });
