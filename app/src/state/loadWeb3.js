@@ -1,6 +1,10 @@
 import store from 'state/store';
 import Web3 from 'web3';
 
+// load ABIs
+import BouncerProxy from 'contracts/BouncerProxy';
+import SimpleStorage from 'contracts/SimpleStorage';
+
 export async function loadWeb3() {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
   window.addEventListener('load', async function(dispatch) {
@@ -96,13 +100,13 @@ export async function loadWeb3() {
         balance: balance
       }
     });
+
+    loadContracts();
   });
 }
 
-let timer = null;
-
-export async function startTipTimer() {
-  timer = setTimeout(function() {
+function startTipTimer() {
+  let timer = setTimeout(function() {
     store.dispatch({
       type: 'SHOW_TIP',
       payload: {
@@ -112,4 +116,49 @@ export async function startTipTimer() {
 
     clearTimeout(timer);
   }, 3000);
+}
+
+async function loadContracts() {
+  const unsubscribe = store.subscribe(async () => {
+    // wait for web3
+    if (!store.getState().web3.web3Ready) {
+      console.log('waiting for web3');
+      return;
+    }
+
+    const web3 = store.getState().web3.instance;
+    const networkID = store.getState().web3.networkID;
+
+    // check that we're on a network that this contract has been deployed to
+    const isDeployedOnNetwork =
+      !!BouncerProxy.networks[networkID] && !!SimpleStorage.networks[networkID];
+
+    if (isDeployedOnNetwork) {
+      // BouncerProxy
+      const BouncerProxyContract = await new web3.eth.Contract(
+        BouncerProxy.abi,
+        BouncerProxy.networks[networkID].address
+      );
+
+      // SimpleStorage
+      const SimpleStorageContract = await new web3.eth.Contract(
+        SimpleStorage.abi,
+        SimpleStorage.networks[networkID].address
+      );
+
+      // Add more contracts here...
+
+      store.dispatch({
+        type: 'CONTRACTS_INITIALIZED',
+        payload: {
+          bouncerProxy: BouncerProxyContract,
+          simpleStorage: SimpleStorageContract,
+          contractList: [{ value: 'simpleStorage', label: 'simpleStorage' }],
+          contractsReady: true
+        }
+      });
+    }
+
+    return unsubscribe();
+  });
 }

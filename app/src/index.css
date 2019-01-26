@@ -6,15 +6,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
-pre {
-  font-size: smaller;
-  padding: 1rem;
-  background-color: #c8e1f8;
+.container {
+  box-sizing: border-box;
+  padding: 48px 1em 1em 1em;
+  height: 100%;
 }
 
 .row {
@@ -29,6 +24,11 @@ pre {
 }
 
 @media screen and (min-width: 992px) {
+  .container {
+    max-width: 992px;
+    margin: 0 auto;
+  }
+
   .row-2 {
     grid-template-columns: 1fr 1fr;
   }
@@ -36,6 +36,18 @@ pre {
   .row-3 {
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+pre {
+  font-size: smaller;
+  padding: 1rem;
+  background-color: #c8e1f8;
 }
 
 /* http://tobiasahlin.com/spinkit/ */
@@ -94,7 +106,6 @@ pre {
   }
 }
 
-
 .loader {
   text-align: center;
   padding: 1em;
@@ -112,12 +123,12 @@ pre {
 
 .error {
   border-color: #ffc1c1;
-  color: #fb3c3c;
+  /* color: #fb3c3c; */
 }
 
 .success {
   border-color: #c1ffc6;
-  color: #49fb3c;
+  /* color: #49fb3c; */
 }
 
 
@@ -216,4 +227,11 @@ form>p {
 .pure-form label {
   margin-bottom: 0.4em;
   display: block;
+}
+
+.pure-form hr {
+  color: #e5e5e5;
+  border: solid 1px;
+  border-style: solid;
+  margin-bottom: 1em;
 }

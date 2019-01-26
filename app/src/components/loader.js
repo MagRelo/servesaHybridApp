@@ -9,13 +9,8 @@ class LoadWrapper extends Component {
 
     let message = '';
 
-    if (!this.props.contractsReady) {
-      message = `Contracts not found. Please make sure you are connected to the right network. 
-      <br/><br/> See our <a href="${networkConnectionDocs}" target="_blank" rel="noopener noreferrer">documentation</a> for more information.`;
-    }
-
-    if (!this.props.networkReady) {
-      message = `Please make sure you are connected to the right network. 
+    if (!this.props.networkReady || !this.props.contractsReady) {
+      message = `Please make sure you are connected to the right network.
       <br/><br/> See our <a href="${networkConnectionDocs}" target="_blank" rel="noopener noreferrer">documentation</a> for more information.`;
     }
 
@@ -79,6 +74,7 @@ const mapStateToProps = state => {
   return {
     web3Ready: state.web3.web3Ready,
     networkReady: state.web3.networkReady,
+    network: state.web3.network,
     showTip: state.web3.showTip,
     accountsReady: state.account.accountsReady,
     contractsReady: state.contracts.contractsReady

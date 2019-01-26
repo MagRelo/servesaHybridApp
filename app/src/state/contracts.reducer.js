@@ -1,7 +1,8 @@
 const initialState = {
   bouncerProxy: null,
   simpleStorage: null,
-  contractsReady: false
+  contractsReady: false,
+  contractList: []
 };
 
 const AccountReducer = (state = initialState, action) => {
@@ -9,7 +10,8 @@ const AccountReducer = (state = initialState, action) => {
     return Object.assign({}, state, {
       bouncerProxy: action.payload.bouncerProxy,
       simpleStorage: action.payload.simpleStorage,
-      contractsReady: action.payload.contractsReady
+      contractsReady: action.payload.contractsReady,
+      contractList: action.payload.contractList
     });
   }
 

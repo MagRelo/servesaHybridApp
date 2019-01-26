@@ -11,15 +11,6 @@ function convertType(contractType) {
   return 'text';
 }
 
-function formFeild(input) {
-  return (
-    <div key={input.name}>
-      <label htmlFor="">{input.name}</label>
-      <input type={convertType(input.type)} placeholder={input.type} />
-    </div>
-  );
-}
-
 class AutoForm extends Component {
   state = {
     name: '',
@@ -62,12 +53,21 @@ class AutoForm extends Component {
       formSubmitting: true
     });
 
-    const params = [3];
-
+    const params = [];
+    this.state.inputs.forEach(input => {
+      if (input.type === 'uint256') {
+        params.push(parseInt(this.state[input.name], 10));
+      } else {
+        params.push(this.state[input.name]);
+      }
+    });
+    console.log('params:', ...params);
     try {
-      const reciept = await contract.methods[this.props.method](params).send({
-        from: selectedAccount
-      });
+      const reciept = await contract.methods[this.props.method](...params).send(
+        {
+          from: selectedAccount
+        }
+      );
 
       this.setState({
         formSuccess: true,
@@ -104,6 +104,24 @@ class AutoForm extends Component {
     if (this.state.formSuccess) return 'alert success';
   }
 
+  formFeild(input) {
+    return (
+      <div key={input.name}>
+        <label htmlFor="">{input.name}</label>
+        <input
+          type={convertType(input.type)}
+          name={input.name}
+          placeholder={input.type}
+          onChange={this.handleFormChange.bind(this)}
+        />
+      </div>
+    );
+  }
+
+  handleFormChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
   render() {
     return (
       <form
@@ -117,7 +135,7 @@ class AutoForm extends Component {
 
         <fieldset>
           {this.state.inputs.map(input => {
-            return formFeild(input);
+            return this.formFeild(input);
           })}
         </fieldset>
 
