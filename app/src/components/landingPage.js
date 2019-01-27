@@ -34,26 +34,13 @@ class LandingPage extends Component {
           <div>
             <h3>Redux stores</h3>
             <p>Load web3, contracts and accounts </p>
-
-            <div>
-              <p>state.web3</p>
-              <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
-            </div>
-            <div>
-              <p>state.contracts</p>
-              <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
-            </div>
-            <div>
-              {' '}
-              <p>state.account</p>
-              <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
-            </div>
+            <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
+            <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
+            <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
           </div>
 
           <div>
             <h3>Loader component</h3>
-            <p>Wait for web3, contracts and accounts </p>
-
             <div>
               <div>
                 <p>Require web3 and contracts:</p>
