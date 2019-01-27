@@ -60,7 +60,7 @@ export async function loadWeb3() {
       }
     });
 
-    // set network
+    // load network
     let networkId = await web3.eth.net.getId();
     let network = 'unknown';
     switch (networkId.toString()) {
@@ -83,12 +83,15 @@ export async function loadWeb3() {
         network = 'unknown (local?)';
     }
 
-    // get accounts
+    // load accounts
     let accounts = await web3.eth.getAccounts();
     let balance = 0;
     if (accounts[0]) {
       balance = await web3.eth.getBalance(accounts[0]);
     }
+
+    // load contracts
+    loadContracts();
 
     store.dispatch({
       type: 'WEB3_INITIALIZED',
@@ -100,8 +103,6 @@ export async function loadWeb3() {
         balance: balance
       }
     });
-
-    loadContracts();
   });
 }
 

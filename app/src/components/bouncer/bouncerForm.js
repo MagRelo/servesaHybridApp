@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
+import ethUtil from 'ethereumjs-util';
 
 import store from 'state/store';
-import ethUtil from 'ethereumjs-util';
+// import { sendData } from 'state/loadSockets';
 
 const { soliditySha3 } = require('web3-utils');
 
