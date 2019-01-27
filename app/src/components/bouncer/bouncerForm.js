@@ -7,7 +7,7 @@ import ethUtil from 'ethereumjs-util';
 
 const { soliditySha3 } = require('web3-utils');
 
-function convertType(contractType) {
+function setInputType(contractType) {
   if (contractType === 'uint256') {
     return 'number';
   }
@@ -15,7 +15,20 @@ function convertType(contractType) {
   return 'text';
 }
 
-class LoadWrapper extends Component {
+const FormDisplay = ({ label, value }) => {
+  return (
+    <div
+      className="row"
+      style={{ gridTemplateColumns: 'auto 1fr auto', margin: '1em 0' }}
+    >
+      <div>{label}</div>
+      <div style={{ borderBottom: 'dashed 1px lightgray' }} />
+      <div>{value}</div>
+    </div>
+  );
+};
+
+class BouncerForm extends Component {
   state = {
     isWhiteListed: false,
     accountNonce: 0,
@@ -202,7 +215,7 @@ class LoadWrapper extends Component {
       <div key={input.name}>
         <label htmlFor="">{input.name}</label>
         <input
-          type={convertType(input.type)}
+          type={setInputType(input.type)}
           name={input.name}
           placeholder={input.type}
           onChange={this.handleFormChange.bind(this)}
@@ -227,14 +240,17 @@ class LoadWrapper extends Component {
 
         <p>Bouncer Contract</p>
         <fieldset style={{ padding: '0 1em', fontSize: 'smaller' }}>
-          <p>Contract: {this.state.bouncerAddress}</p>
-          <p>Reward Amount: {this.state.rewardAmount}</p>
+          <FormDisplay label="Contract" value={this.state.bouncerAddress} />
+          <FormDisplay label="Reward" value={this.state.rewardAmount} />
         </fieldset>
 
         <p>Account Status</p>
         <fieldset style={{ padding: '0 1em', fontSize: 'smaller' }}>
-          <p>Account: {this.props.selectedAccount}</p>
-          <p>Whitelist Status: {this.state.whitelistStatus_display}</p>
+          <FormDisplay label="Account" value={this.props.selectedAccount} />
+          <FormDisplay
+            label="Whitelist Status"
+            value={this.state.whitelistStatus_display}
+          />
         </fieldset>
 
         <p>Transaction</p>
@@ -303,4 +319,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   null
-)(LoadWrapper);
+)(BouncerForm);

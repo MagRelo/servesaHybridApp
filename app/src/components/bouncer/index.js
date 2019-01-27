@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Loader from 'components/loader';
 
-import SignatureForm from './signatureForm';
+import SignatureForm from './bouncerForm';
 
 class LandingPage extends Component {
   state = { accounts: null, isWhitelisted: false, nonce: 0 };
