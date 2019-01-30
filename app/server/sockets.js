@@ -16,16 +16,19 @@ module.exports = function startIo(server) {
     // events
     socket.on('bounce-txn', async data => {
       // received...
+      await timeout(1500);
       io.emit('bounce-response', { serverRecieved: true });
 
       // check input data
       const signature = data.signature;
       const signingAccount = data.selectedAccount;
       const targetContractAddress = data.targetContractAddress;
-      const targetContractValue = 0;
       const txnData = data.txnData;
+      const targetContractValue = 0;
       const rewardAddress = '0x0000000000000000000000000000000000000000';
       const rewardAmount = 0;
+
+      // recover signature(?)
 
       // setup contract
       const { web3, networkId, serverAccount } = await getWeb3.getWeb3();
@@ -36,7 +39,18 @@ module.exports = function startIo(server) {
 
       try {
         // submitting...
+        await timeout(1500);
         io.emit('bounce-response', { serverSubmitted: true });
+
+        console.log({
+          signature,
+          signingAccount,
+          targetContractAddress,
+          targetContractValue,
+          txnData,
+          rewardAddress,
+          rewardAmount
+        });
 
         // send transaction
         const receipt = await BouncerProxy.methods
@@ -52,6 +66,7 @@ module.exports = function startIo(server) {
           .send({ from: serverAccount.address });
 
         // transaction result
+        await timeout(1500);
         io.emit('bounce-response', { serverComplete: true, receipt });
       } catch (error) {
         console.log(error);

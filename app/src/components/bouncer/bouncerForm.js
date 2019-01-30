@@ -1,20 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
-import ethUtil from 'ethereumjs-util';
 
 import store from 'state/store';
-import { sendData } from 'state/loadSockets';
-
-const { soliditySha3 } = require('web3-utils');
-
-function setInputType(contractType) {
-  if (contractType === 'uint256') {
-    return 'number';
-  }
-
-  return 'text';
-}
+import { bounceTransaction } from '../../state/loadSockets';
 
 const FormDisplay = ({ label, value }) => {
   return (
@@ -39,6 +28,7 @@ class BouncerForm extends Component {
   componentDidMount() {
     this.getWhitelistStatus();
   }
+
   componentDidUpdate(oldProps) {
     if (oldProps.selectedAccount !== this.props.selectedAccount) {
       this.getWhitelistStatus();
@@ -104,96 +94,29 @@ class BouncerForm extends Component {
 
     // set loading state
     this.setState({
-      formSubmitting: true
+      formSubmitting: true,
+      formMessage: 'Waiting for MetaMask...'
     });
 
-    try {
-      const web3 = store.getState().web3.instance;
-      const bouncerProxyInstance = store.getState().contracts.bouncerProxy;
-      const selectedAccount = store.getState().account.selectedAccount;
+    const params = [];
+    this.state.inputs.forEach(input => {
+      if (input.type === 'uint256') {
+        params.push(parseInt(this.state[input.name], 10));
+      } else {
+        params.push(this.state[input.name]);
+      }
+    });
 
-      // build txn data
-      const targetContract = store.getState().contracts[this.state.contract];
-      const params = [];
-      this.state.inputs.forEach(input => {
-        if (input.type === 'uint256') {
-          params.push(parseInt(this.state[input.name], 10));
-        } else {
-          params.push(this.state[input.name]);
-        }
-      });
-      const txnData = targetContract.methods[this.state.method](
-        ...params
-      ).encodeABI();
+    // test value
+    const valueAmount = 0;
 
-      // test vars
-      const targetAmount = 0,
-        rewardAmount = 0,
-        accountNonce = 0;
-      const rewardAddress = '0x0000000000000000000000000000000000000000';
-
-      // hash & sign message
-      const parts = [
-        bouncerProxyInstance._address,
-        selectedAccount,
-        targetContract._address,
-        web3.utils.toTwosComplement(targetAmount),
-        txnData,
-        rewardAddress,
-        web3.utils.toTwosComplement(rewardAmount),
-        web3.utils.toTwosComplement(accountNonce)
-      ];
-      const message = soliditySha3(...parts);
-      const contentAsHex = ethUtil.bufferToHex(new Buffer(message, 'utf8'));
-
-      // sign transaction
-      web3.currentProvider.sendAsync(
-        {
-          method: 'personal_sign',
-          params: [contentAsHex, selectedAccount],
-          from: selectedAccount
-        },
-        async (error, response) => {
-          if (error) return console.error(error);
-          if (response.error) {
-            return this.setState({
-              formError: true,
-              formAlert: true,
-              formSubmitting: false,
-              formMessage: 'User denied signature.'
-            });
-          }
-
-          // send to server
-          const signature = response.result;
-          sendData('bounce-txn', {
-            parts,
-            signature,
-            selectedAccount,
-            targetContractAddress: targetContract._address,
-            txnData,
-            rewardAddress,
-            rewardAmount
-          });
-
-          this.setState({
-            formSuccess: true,
-            formAlert: true,
-            formSubmitting: false,
-            formMessage: 'Submitted...'
-          });
-        }
-      );
-    } catch (error) {
-      console.log(error.message);
-
-      this.setState({
-        formError: true,
-        formAlert: true,
-        formSubmitting: false,
-        formMessage: error.message
-      });
-    }
+    // send to server
+    bounceTransaction(
+      this.state.contract,
+      this.state.method,
+      params,
+      valueAmount
+    );
   }
 
   handleFormChange(event) {
@@ -215,18 +138,13 @@ class BouncerForm extends Component {
       <div key={input.name}>
         <label htmlFor="">{input.name}</label>
         <input
-          type={setInputType(input.type)}
+          type={input.type === 'uint256' ? 'number' : 'text'}
           name={input.name}
           placeholder={input.type}
           onChange={this.handleFormChange.bind(this)}
         />
       </div>
     );
-  }
-
-  alertClass() {
-    if (this.state.formError) return 'alert error';
-    if (this.state.formSuccess) return 'alert success';
   }
 
   render() {
@@ -272,30 +190,43 @@ class BouncerForm extends Component {
           </fieldset>
         </fieldset>
 
-        <hr />
         <button className="pure-button pure-button-primary" type="submit">
-          Submit
+          Sign & Submit
         </button>
 
         {this.state.formSubmitting ? (
-          <span style={{ fontSize: 'smaller', marginLeft: '1em' }}>
-            Waiting for MetaMask...
-          </span>
-        ) : null}
+          <div className="form-display-box">
+            <FormDisplay
+              label="Txn signed"
+              value={this.props.clientSubmitted}
+            />
+            <FormDisplay
+              label="Txn submitted to server"
+              value={this.props.clientSubmitted}
+            />
+            <FormDisplay
+              label="Txn received by server"
+              value={this.props.serverRecieved}
+            />
+            <FormDisplay
+              label="Txn validated and sent to chain"
+              value={this.props.serverSubmitted}
+            />
+            <FormDisplay
+              label="Txn confirmed"
+              value={this.props.serverComplete}
+            />
 
-        {this.state.formAlert ? (
-          <div className={this.alertClass()}>
-            <p>{this.state.formMessage}</p>
-            <p>clientSubmitted: {this.props.clientSubmitted}</p>
-            <p>serverRecieved: {this.props.serverRecieved}</p>
-            <p>serverSubmitted: {this.props.serverSubmitted}</p>
-            <p>serverComplete: {this.props.serverComplete}</p>
+            {this.props.serverError ? (
+              <p>Error: {this.props.errorMessage}</p>
+            ) : null}
 
             <button className="pure-button" onClick={this.resetForm.bind(this)}>
               Ok
             </button>
           </div>
         ) : null}
+
         <div>
           {/* <p>Debug</p>
           <pre>{JSON.stringify(this.state, null, 2)}</pre> */}
@@ -308,15 +239,17 @@ class BouncerForm extends Component {
 const mapStateToProps = state => {
   return {
     selectedAccount: state.account.selectedAccount,
-
     contractList: state.contracts.contractList,
 
     serverAccount: state.bounce.serverAccount,
     serverAccountBalance: state.bounce.serverAccountBalance,
+
     clientSubmitted: state.bounce.clientSubmitted.toString(),
     serverRecieved: state.bounce.serverRecieved.toString(),
     serverSubmitted: state.bounce.serverSubmitted.toString(),
-    serverComplete: state.bounce.serverComplete.toString()
+    serverComplete: state.bounce.serverComplete.toString(),
+    serverError: state.bounce.serverError,
+    errorMessage: state.bounce.errorMessage
   };
 };
 
