@@ -6,13 +6,13 @@ import { combineReducers } from 'redux';
 import web3 from 'state/reducers/web3.reducer';
 import account from 'state/reducers/account.reducer';
 import contracts from 'state/reducers/contracts.reducer';
-import socket from 'state/reducers/socket.reducer';
+import bounce from 'state/reducers/bounce.reducer';
 
 const reducer = combineReducers({
   web3,
   account,
   contracts,
-  socket
+  bounce
 });
 
 // Redux DevTools

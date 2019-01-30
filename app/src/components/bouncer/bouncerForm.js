@@ -4,7 +4,7 @@ import Select from 'react-select';
 import ethUtil from 'ethereumjs-util';
 
 import store from 'state/store';
-// import { sendData } from 'state/loadSockets';
+import { sendData } from 'state/loadSockets';
 
 const { soliditySha3 } = require('web3-utils');
 
@@ -32,20 +32,8 @@ const FormDisplay = ({ label, value }) => {
 class BouncerForm extends Component {
   state = {
     isWhiteListed: false,
-    accountNonce: 0,
-    methodList: [
-      {
-        value: 0,
-        label: 'pasta'
-      }
-    ],
-    contractValue: 0,
     whitelistStatus: false,
-    inputs: [],
-    targetAmount: 0,
-    rewardAddress: '0x0000000000000000000000000000000000000000',
-    rewardAmount: 0,
-    bouncerAddress: ''
+    inputs: []
   };
 
   componentDidMount() {
@@ -64,7 +52,7 @@ class BouncerForm extends Component {
       .whitelist(this.props.selectedAccount)
       .call({ from: this.props.selectedAccount });
 
-    console.log('updated status');
+    console.log('updated whitelist status for', this.props.selectedAccount);
     this.setState({
       whitelistStatus: status,
       whitelistStatus_display: status ? 'Approved' : 'Not Approved',
@@ -134,21 +122,26 @@ class BouncerForm extends Component {
           params.push(this.state[input.name]);
         }
       });
-      console.log('params:', ...params);
       const txnData = targetContract.methods[this.state.method](
         ...params
       ).encodeABI();
+
+      // test vars
+      const targetAmount = 0,
+        rewardAmount = 0,
+        accountNonce = 0;
+      const rewardAddress = '0x0000000000000000000000000000000000000000';
 
       // hash & sign message
       const parts = [
         bouncerProxyInstance._address,
         selectedAccount,
         targetContract._address,
-        web3.utils.toTwosComplement(this.state.targetAmount),
+        web3.utils.toTwosComplement(targetAmount),
         txnData,
-        this.state.rewardAddress,
-        web3.utils.toTwosComplement(this.state.rewardAmount),
-        web3.utils.toTwosComplement(this.state.accountNonce)
+        rewardAddress,
+        web3.utils.toTwosComplement(rewardAmount),
+        web3.utils.toTwosComplement(accountNonce)
       ];
       const message = soliditySha3(...parts);
       const contentAsHex = ethUtil.bufferToHex(new Buffer(message, 'utf8'));
@@ -171,17 +164,15 @@ class BouncerForm extends Component {
             });
           }
 
-          // submit signed transaction to server
-          const serverResponse = await fetch('/api/bouncer', {
-            method: 'POST',
-            body: JSON.stringify(response)
-          });
+          // send to server
+          const signature = response.result;
+          sendData('bounce-txn', { parts, message, contentAsHex, signature });
 
           this.setState({
             formSuccess: true,
             formAlert: true,
             formSubmitting: false,
-            formMessage: serverResponse.status
+            formMessage: 'Submitted...'
           });
         }
       );
@@ -239,20 +230,35 @@ class BouncerForm extends Component {
       >
         <legend>Bounce Transaction </legend>
 
-        <p>Bouncer Contract</p>
-        <fieldset style={{ padding: '0 1em', fontSize: 'smaller' }}>
-          <FormDisplay label="Contract" value={this.state.bouncerAddress} />
-          <FormDisplay label="Reward" value={this.state.rewardAmount} />
-        </fieldset>
-
-        <p>Account Status</p>
-        <fieldset style={{ padding: '0 1em', fontSize: 'smaller' }}>
-          <FormDisplay label="Account" value={this.props.selectedAccount} />
+        <p>Server Account</p>
+        <div className="form-display-box">
           <FormDisplay
-            label="Whitelist Status"
+            label="Server Account"
+            value={this.props.serverAccount}
+          />
+          <FormDisplay
+            label="Server Account Balance"
+            value={this.props.serverAccountBalance}
+          />
+        </div>
+
+        <p>Bouncer Contract</p>
+        <div className="form-display-box">
+          <FormDisplay label="Contract" value={'asdf'} />
+          <FormDisplay label="Reward" value={'adsf'} />
+        </div>
+
+        <p>Web3 Account</p>
+        <div className="form-display-box">
+          <FormDisplay
+            label="Web3 Account"
+            value={this.props.selectedAccount}
+          />
+          <FormDisplay
+            label="Account Status"
             value={this.state.whitelistStatus_display}
           />
-        </fieldset>
+        </div>
 
         <p>Transaction</p>
         <fieldset style={{ padding: '0 1em 1em', fontSize: 'smaller' }}>
@@ -290,12 +296,16 @@ class BouncerForm extends Component {
         {this.state.formAlert ? (
           <div className={this.alertClass()}>
             <p>{this.state.formMessage}</p>
+            <p>clientSubmitted: {this.props.clientSubmitted}</p>
+            <p>serverRecieved: {this.props.serverRecieved}</p>
+            <p>serverSubmitted: {this.props.serverSubmitted}</p>
+            <p>serverComplete: {this.props.serverComplete}</p>
+
             <button className="pure-button" onClick={this.resetForm.bind(this)}>
               Ok
             </button>
           </div>
         ) : null}
-
         <div>
           {/* <p>Debug</p>
           <pre>{JSON.stringify(this.state, null, 2)}</pre> */}
@@ -307,13 +317,16 @@ class BouncerForm extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3Ready: state.web3.web3Ready,
-    networkReady: state.web3.networkReady,
-    showTip: state.web3.showTip,
-    accountsReady: state.account.accountsReady,
     selectedAccount: state.account.selectedAccount,
-    contractsReady: state.contracts.contractsReady,
-    contractList: state.contracts.contractList
+
+    contractList: state.contracts.contractList,
+
+    serverAccount: state.bounce.serverAccount,
+    serverAccountBalance: state.bounce.serverAccountBalance,
+    clientSubmitted: state.bounce.clientSubmitted.toString(),
+    serverRecieved: state.bounce.serverRecieved.toString(),
+    serverSubmitted: state.bounce.serverSubmitted.toString(),
+    serverComplete: state.bounce.serverComplete.toString()
   };
 };
 

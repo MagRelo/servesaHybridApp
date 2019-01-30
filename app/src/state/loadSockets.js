@@ -3,11 +3,29 @@ import store from 'state/store';
 
 let socket = null;
 
+export async function sendData(eventType, data) {
+  store.dispatch({
+    type: 'BOUNCE_SENT',
+    payload: {
+      clientSubmitted: true,
+      serverRecieved: false,
+      serverSubmitted: false,
+      serverComplete: false
+    }
+  });
+
+  socket.emit(eventType, data);
+}
+
 export async function initSockets() {
   socket = io('/');
   socket.on('connect', () => {
     console.log('socket connected:', socket.id);
   });
+
+  // servesa events
+  socket.on('server-account', updateServerData);
+  socket.on('bounce-response', bounceResponse);
 
   // standard errors
   socket.on('reconnecting', reconnectError);
@@ -16,23 +34,25 @@ export async function initSockets() {
   socket.on('connect_failed', socketError);
   socket.on('reconnect_failed', socketError);
 
-  // servesa events
-  socket.on('setup', updateServerData);
-
   return true;
 }
 
 // socket handlers
 async function updateServerData(data) {
   return store.dispatch({
-    type: 'SOCKET_DATA',
+    type: 'SERVER_ACCOUNT',
     payload: data
   });
 }
 
-function socketError(error) {
-  console.error('socket error!', error);
+async function bounceResponse(data) {
+  return store.dispatch({
+    type: 'BOUNCE_RESPONSE',
+    payload: data
+  });
 }
+
+// standard errors
 
 function reconnectError(data) {
   if (data > 5) {
@@ -42,7 +62,6 @@ function reconnectError(data) {
     console.log('reconnection attempts: ', data);
   }
 }
-
-export async function sendData() {
-  socket.emit('bounce-txn', { party: 'time' });
+function socketError(error) {
+  console.error('socket error!', error);
 }

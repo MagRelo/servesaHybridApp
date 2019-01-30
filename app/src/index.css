@@ -234,3 +234,8 @@ form>p {
   border-style: solid;
   margin-bottom: 1em;
 }
+
+.form-display-box {
+  font-size: smaller;
+  padding-left: 1em;
+}

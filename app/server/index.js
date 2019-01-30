@@ -61,6 +61,9 @@ dbConnect();
 // Server
 // *
 
+// sockets routing
+let io = require('./sockets')(server);
+
 // configure express middleware
 app.use(express.static('build_client'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -75,26 +78,37 @@ app.use(
 );
 
 // http routing
-// serve the frontend for all non-api requests
+app.post('/api/bouncer', async function(req, res) {
+  // input validation
+  // const userAddress = recover()
 
-app.post('/api/bouncer', function(req, res) {
-  res.status(200).send('done');
+  // test web3
+  const {
+    web3Connected,
+    network,
+    networkId,
+    serverAccount,
+    serverAccountBalance
+  } = await getWeb3.getWeb3();
+
+  res.status(200).send({
+    web3Connected,
+    network,
+    networkId,
+    serverAccount,
+    serverAccountBalance
+  });
 });
 
+// serve the frontend for all non-api requests
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root: './build_client' });
 });
-
-// sockets routing
-let io = require('./sockets')(server);
 
 // start server
 server.listen(8080, () => {
   console.log('server listening on 8080');
 });
-
-// listen for events
-// const { instance } = getWeb3.loadWeb3();
 
 // *
 // helpers
@@ -112,21 +126,18 @@ function signatureAuth(req, res, next) {
     return res.status(401).send('Unauthorized');
   }
 
-  // recover public key
-  const userAddress = sigUtil.recoverPersonalSignature({
-    data: authObject.message,
-    sig: authObject.signature
-  });
-
-  // parse message
-  const message = JSON.parse(
-    ethUtil.toBuffer(authObject.message).toString('utf8')
-  );
-
   // pass along userAddress and message
-  req.userAddress = userAddress;
-  req.userMessage = message;
+  req.userAddress = recover(authObject.message, authObject.signature);
+  req.userMessage = authObject.message;
 
   // call next middleware function
   next();
+}
+
+function recover(message, signature) {
+  // recover public key
+  return sigUtil.recoverPersonalSignature({
+    data: message,
+    sig: signature
+  });
 }

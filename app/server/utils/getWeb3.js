@@ -1,9 +1,27 @@
 const Web3 = require('web3');
 
-var web3;
-let web3Connected = false;
+let web3,
+  web3Connected,
+  network,
+  networkId,
+  serverAccount,
+  serverAccountBalance = null;
 
-exports.loadWeb3 = async function() {
+exports.getWeb3 = async function() {
+  if (!web3) {
+    await loadWeb3();
+  }
+  return {
+    web3,
+    web3Connected,
+    network,
+    networkId,
+    serverAccount,
+    serverAccountBalance
+  };
+};
+
+async function loadWeb3() {
   const connectionString = process.env.RPC_CONNECTION_STRING;
   console.log('RPC connection string: ', connectionString);
 
@@ -20,8 +38,8 @@ exports.loadWeb3 = async function() {
   }
 
   // set network
-  let networkId = await web3.eth.net.getId();
-  let network = 'unknown';
+  networkId = await web3.eth.net.getId();
+  network = 'unknown';
   switch (networkId.toString()) {
     case '1':
       network = 'mainnet';
@@ -38,27 +56,21 @@ exports.loadWeb3 = async function() {
     case '42':
       network = 'kovan';
       break;
-    case '654321':
-      network = 'pragma-testnet';
-      break;
     default:
       network = 'unknown (local?)';
   }
 
-  // get accounts
-  let accounts = await web3.eth.getAccounts();
-  let balance = 0;
-  if (accounts[0]) {
-    balance = await web3.eth.getBalance(accounts[0]);
+  // add account from ENV vars
+  const privateKey = process.env.SERVER_PRIVATE_KEY;
+  if (!privateKey) {
+    return console.log('no private key');
   }
+  serverAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
+  serverAccountBalance = await web3.eth.getBalance(serverAccount.address);
 
-  return {
-    instance: web3,
-    network: network,
-    accounts: accounts,
-    balance: balance
-  };
-};
+  console.log('done');
+  return true;
+}
 
 async function web3Connect() {
   let conn = false;
@@ -88,3 +100,5 @@ async function web3Connect() {
 
   return conn;
 }
+
+exports.getServerAccount = async function() {};
