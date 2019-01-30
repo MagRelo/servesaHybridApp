@@ -6,7 +6,9 @@ const { soliditySha3 } = require('web3-utils');
 contract('BouncerProxy', accounts => {
   let [deployer, newBouncer, signingAccount] = accounts;
 
-  it('should add account as a bouncer', async () => {
+  console.log(accounts);
+
+  xit('should add account as a bouncer', async () => {
     const BouncerProxyInstance = await BouncerProxy.deployed();
 
     // add newBouncer to whitelist
@@ -18,7 +20,7 @@ contract('BouncerProxy', accounts => {
     assert.equal(isWhiteListed, true, 'Bouncer not added to whitelist.');
   });
 
-  it('should forward the transaction to update SimpleStorage ', async () => {
+  xit('should forward the transaction to update SimpleStorage ', async () => {
     const BouncerProxyInstance = await BouncerProxy.deployed();
     const SimpleStorageInstance = await SimpleStorage.deployed();
 
@@ -72,7 +74,7 @@ contract('BouncerProxy', accounts => {
       data,
       rewardAddress,
       rewardAmount,
-      { from: signingAccount }
+      { from: deployer }
     );
 
     // Check results

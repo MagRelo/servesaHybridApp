@@ -12,6 +12,10 @@ const SocketReducer = (state = initialState, action) => {
     return Object.assign({}, state, action.payload);
   }
 
+  if (action.type === 'BOUNCE_BEGIN') {
+    return Object.assign({}, state, action.payload);
+  }
+
   if (action.type === 'BOUNCE_SENT') {
     return Object.assign({}, state, action.payload);
   }
