@@ -48,9 +48,13 @@ pragma solidity ^0.5.0;
 //you run your own relayer and pay for all of their transactions, revoking any bad actors if needed
 
 contract BouncerProxy {
+  
+  
   //whitelist the deployer so they can whitelist others
-  constructor() public {
+  constructor(address _serverAccount, address _adminAccount) public {
      whitelist[msg.sender] = true;
+     whitelist[_serverAccount] = true;
+     whitelist[_adminAccount] = true;
   }
   //to avoid replay
   mapping(address => uint) public nonce;
