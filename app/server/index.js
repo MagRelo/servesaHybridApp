@@ -9,7 +9,7 @@ const morgan = require('morgan');
 
 const getWeb3 = require('./utils/getWeb3');
 const sigUtil = require('eth-sig-util');
-const ethUtil = require('ethereumjs-util');
+// const ethUtil = require('ethereumjs-util');
 
 // *
 // load env var's

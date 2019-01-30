@@ -166,7 +166,15 @@ class BouncerForm extends Component {
 
           // send to server
           const signature = response.result;
-          sendData('bounce-txn', { parts, message, contentAsHex, signature });
+          sendData('bounce-txn', {
+            parts,
+            signature,
+            selectedAccount,
+            targetContractAddress: targetContract._address,
+            txnData,
+            rewardAddress,
+            rewardAmount
+          });
 
           this.setState({
             formSuccess: true,
@@ -230,28 +238,10 @@ class BouncerForm extends Component {
       >
         <legend>Bounce Transaction </legend>
 
-        <p>Server Account</p>
-        <div className="form-display-box">
-          <FormDisplay
-            label="Server Account"
-            value={this.props.serverAccount}
-          />
-          <FormDisplay
-            label="Server Account Balance"
-            value={this.props.serverAccountBalance}
-          />
-        </div>
-
-        <p>Bouncer Contract</p>
-        <div className="form-display-box">
-          <FormDisplay label="Contract" value={'asdf'} />
-          <FormDisplay label="Reward" value={'adsf'} />
-        </div>
-
         <p>Web3 Account</p>
         <div className="form-display-box">
           <FormDisplay
-            label="Web3 Account"
+            label="Current Account"
             value={this.props.selectedAccount}
           />
           <FormDisplay
