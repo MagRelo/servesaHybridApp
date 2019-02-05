@@ -60,16 +60,6 @@ contract('BouncerProxy', accounts => {
     const message = soliditySha3(...parts);
     let signature = await web3.eth.sign(message, signingAccount);
 
-    console.log({
-      signature,
-      signingAccount,
-      simpleStorageAddress,
-      targetContractValue,
-      txnData,
-      rewardAddress,
-      rewardAmount
-    });
-
     // send
     await BouncerProxyInstance.forward(
       signature,
@@ -85,11 +75,11 @@ contract('BouncerProxy', accounts => {
     // Check results
     // 1) the value in simplestorage was updated
     // 2) it was updated by bouncerProxy address, not the signingAccount
-    let currentValue = await SimpleStorageInstance.value.call({
+    currentValue = await SimpleStorageInstance.value.call({
       from: deployer
     });
     assert.equal(currentValue, 100, 'Value not updated');
-    let lastUpdatedBy = await SimpleStorageInstance.lastUpdatedBy.call({
+    lastUpdatedBy = await SimpleStorageInstance.lastUpdatedBy.call({
       from: deployer
     });
     assert.equal(
