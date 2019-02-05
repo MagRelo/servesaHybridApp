@@ -16,10 +16,10 @@ module.exports = function startIo(server) {
     // events
     socket.on('bounce-txn', async data => {
       // received...
-      await timeout(1500);
+      // await timeout(1000);
       io.emit('bounce-response', { serverRecieved: true });
 
-      // check input data
+      // validate input data
       const signature = data.signature;
       const signingAccount = data.selectedAccount;
       const targetContractAddress = data.targetContractAddress;
@@ -30,7 +30,7 @@ module.exports = function startIo(server) {
 
       // recover signature(?)
 
-      // setup contract
+      // setup bouncerProxy contract
       const { web3, networkId, serverAccount } = await getWeb3.getWeb3();
       const BouncerProxy = await new web3.eth.Contract(
         bpArtifact.abi,
@@ -39,7 +39,7 @@ module.exports = function startIo(server) {
 
       try {
         // submitting...
-        await timeout(1500);
+        // await timeout(1000);
         io.emit('bounce-response', { serverSubmitted: true });
 
         console.log({
@@ -53,8 +53,20 @@ module.exports = function startIo(server) {
         });
 
         // send transaction
-        const receipt = await BouncerProxy.methods
-          .forward(
+        // const forwardReceipt = await BouncerProxy.methods
+        //   .forward(
+        //     signature,
+        //     signingAccount,
+        //     targetContractAddress,
+        //     targetContractValue,
+        //     txnData,
+        //     rewardAddress,
+        //     rewardAmount
+        //   )
+        //   .send({ from: serverAccount.address });
+
+        const forwardReceipt = await BouncerProxy.methods
+          .getHash(
             signature,
             signingAccount,
             targetContractAddress,
@@ -66,8 +78,11 @@ module.exports = function startIo(server) {
           .send({ from: serverAccount.address });
 
         // transaction result
-        await timeout(1500);
-        io.emit('bounce-response', { serverComplete: true, receipt });
+        // await timeout(1000);
+        io.emit('bounce-response', {
+          serverComplete: true,
+          receipt: forwardReceipt
+        });
       } catch (error) {
         console.log(error);
         io.emit('bounce-response', {

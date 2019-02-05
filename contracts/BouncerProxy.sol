@@ -155,6 +155,6 @@ contract BouncerProxy {
   }
 }
 
-contract StandardToken {
-  function transfer(address _to,uint256 _value) public returns (bool) { }
-}
+// contract StandardToken {
+//   function transfer(address _to,uint256 _value) public returns (bool) { }
+// }

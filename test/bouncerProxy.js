@@ -6,28 +6,26 @@ const { soliditySha3 } = require('web3-utils');
 contract('BouncerProxy', accounts => {
   let [deployer, newBouncer, signingAccount] = accounts;
 
-  console.log(accounts);
-
-  xit('should add account as a bouncer', async () => {
+  it('should add account as a bouncer', async () => {
     const BouncerProxyInstance = await BouncerProxy.deployed();
 
     // add newBouncer to whitelist
-    await BouncerProxyInstance.updateWhitelist(newBouncer, { from: deployer });
+    await BouncerProxyInstance.updateWhitelist(signingAccount, {
+      from: deployer
+    });
 
     // Get stored value
-    const isWhiteListed = await BouncerProxyInstance.whitelist(newBouncer);
+    const isWhiteListed = await BouncerProxyInstance.whitelist(signingAccount);
 
     assert.equal(isWhiteListed, true, 'Bouncer not added to whitelist.');
   });
 
-  xit('should forward the transaction to update SimpleStorage ', async () => {
+  it('should forward the transaction to update SimpleStorage ', async () => {
     const BouncerProxyInstance = await BouncerProxy.deployed();
     const SimpleStorageInstance = await SimpleStorage.deployed();
 
     // add signingAccount to whitelist
-    await BouncerProxyInstance.updateWhitelist(signingAccount, {
-      from: deployer
-    });
+    await BouncerProxyInstance.updateWhitelist(signingAccount, true);
 
     // build txn data
     const simpleStorageABI = SimpleStorageInstance.abi;
@@ -36,42 +34,49 @@ contract('BouncerProxy', accounts => {
       simpleStorageABI,
       simpleStorageAddress
     );
-    var data = destContractInstance.methods.saveSender(100).encodeABI();
-    // console.log('DATA:', data);
+    var txnData = destContractInstance.methods.saveSender(100).encodeABI();
+    const targetContractValue = 0;
+
+    // get signing account nonce
+    const nonce = await BouncerProxyInstance.nonce(signingAccount);
 
     // reward
     const rewardAddress = '0x0000000000000000000000000000000000000000';
     const rewardAmount = 0;
-
-    // get signing account nonce
-    const nonce = await BouncerProxyInstance.nonce(signingAccount);
-    // console.log('signingAccount:', signingAccount);
-    // console.log('NONCE:', nonce);
 
     // parts
     const parts = [
       BouncerProxyInstance.address,
       signingAccount,
       simpleStorageAddress,
-      web3.utils.toTwosComplement(0),
-      data,
+      web3.utils.toTwosComplement(targetContractValue),
+      txnData,
       rewardAddress,
       web3.utils.toTwosComplement(rewardAmount),
       web3.utils.toTwosComplement(nonce)
     ];
-    // console.log('PARTS', parts);
 
     // hash & sign message
     const message = soliditySha3(...parts);
     let signature = await web3.eth.sign(message, signingAccount);
+
+    console.log({
+      signature,
+      signingAccount,
+      simpleStorageAddress,
+      targetContractValue,
+      txnData,
+      rewardAddress,
+      rewardAmount
+    });
 
     // send
     await BouncerProxyInstance.forward(
       signature,
       signingAccount,
       simpleStorageAddress,
-      0,
-      data,
+      targetContractValue,
+      txnData,
       rewardAddress,
       rewardAmount,
       { from: deployer }

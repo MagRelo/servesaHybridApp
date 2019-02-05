@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 import { loadWeb3 } from 'state/loadWeb3';
-import { initSockets } from 'state/loadSockets';
+import { initSockets } from 'state/sockets';
 
 // redux stote
 import store from 'state/store';

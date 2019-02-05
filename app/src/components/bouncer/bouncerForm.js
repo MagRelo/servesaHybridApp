@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 
 import store from 'state/store';
-import { bounceTransaction } from '../../state/loadSockets';
+import { bounceTransaction } from 'state/sockets';
 
 const FormDisplay = ({ label, value }) => {
   return (

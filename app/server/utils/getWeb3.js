@@ -68,7 +68,6 @@ async function loadWeb3() {
   serverAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
   serverAccountBalance = await web3.eth.getBalance(serverAccount.address);
 
-  console.log('done');
   return true;
 }
 

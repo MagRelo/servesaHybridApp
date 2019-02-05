@@ -4,7 +4,7 @@ contract('SimpleStorage', accounts => {
   it('update value and store msg.sender', async () => {
     const simpleStorageInstance = await SimpleStorage.deployed();
 
-    // Set value of 89
+    // Set value of 100
     await simpleStorageInstance.saveSender(100, { from: accounts[0] });
 
     // test
