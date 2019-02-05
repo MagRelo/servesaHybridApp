@@ -1,18 +1,87 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import Select from 'react-select';
+
+import store from 'state/store';
+
 import Loader from 'components/loader';
 import AutoForm from 'components/autoForm';
 
 class LandingPage extends Component {
-  state = { accounts: null };
+  state = { accounts: null, contract: '', methodList: [], method: '' };
+
+  contractSelect(option) {
+    // build method list
+    const targetContract = store.getState().contracts[option.value];
+    let methods = [];
+    for (var key in targetContract._jsonInterface) {
+      if (targetContract._jsonInterface[key].type === 'function') {
+        methods.push(targetContract._jsonInterface[key]);
+      }
+    }
+
+    this.setState({
+      contract: option.value,
+      methodList: methods.map(method => {
+        return { value: method.name, label: method.name };
+      }),
+      method: ''
+    });
+  }
+
+  methodSelect(option) {
+    const targetContract = store.getState().contracts[this.state.contract];
+
+    let methodSpec = null;
+    for (var key in targetContract._jsonInterface) {
+      if (
+        option.value === targetContract._jsonInterface[key].name &&
+        targetContract._jsonInterface[key].type === 'function'
+      ) {
+        methodSpec = targetContract._jsonInterface[key];
+      }
+    }
+
+    this.setState({
+      method: option.value,
+      name: methodSpec.name,
+      inputs: methodSpec.inputs,
+      stateMutability: methodSpec.stateMutability
+    });
+  }
 
   render() {
     return (
       <div>
         <h1>AutoForm</h1>
         <Loader>
-          <AutoForm contract="bouncerProxy" method="getHash" />
+          <div>
+            <form className="pure-form">
+              <label htmlFor="contractSelect">Select Target Contract</label>
+              <Select
+                options={this.props.contractList}
+                id="contractSelect"
+                name="contractSelect"
+                onChange={this.contractSelect.bind(this)}
+              />
+
+              <label htmlFor="methodSelect">Select Contract Method</label>
+              <Select
+                options={this.state.methodList}
+                id="methodSelect"
+                name="methodSelect"
+                onChange={this.methodSelect.bind(this)}
+              />
+            </form>
+
+            {!!this.state.contract && !!this.state.method ? (
+              <AutoForm
+                contract={this.state.contract}
+                method={this.state.method}
+              />
+            ) : null}
+          </div>
         </Loader>
       </div>
     );
@@ -21,28 +90,7 @@ class LandingPage extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3: {
-      web3Ready: state.web3.web3Ready,
-      instance: typeof state.web3.instance,
-      networkReady: state.web3.networkReady,
-      network: state.web3.network,
-      networkID: state.web3.networkID
-    },
-
-    account: {
-      accountsReady: state.account.accountsReady,
-      selectedAccount: state.account.selectedAccount,
-      balance: state.account.balance,
-      accounts: state.account.accounts
-    },
-
-    contracts: {
-      contractsReady: state.contracts.contractsReady,
-      simpleStorage: typeof state.contracts.simpleStorage,
-      bouncerProxy: typeof state.contracts.bouncerProxy
-    },
-
-    showTip: state.web3.showTip
+    contractList: state.contracts.contractList
   };
 };
 
