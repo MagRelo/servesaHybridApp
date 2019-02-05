@@ -29,6 +29,9 @@ export async function bounceTransaction(contract, method, params, amount) {
   // build txn data
   const targetContract = store.getState().contracts[contract];
   const txnData = targetContract.methods[method](...params).encodeABI();
+  const targetContractAmount = amount || 0;
+
+  // get account nonce
   const accountNonce = web3.utils.toBN(
     await bouncerProxyInstance.methods
       .nonce(selectedAccount)
@@ -44,22 +47,19 @@ export async function bounceTransaction(contract, method, params, amount) {
     bouncerProxyInstance._address,
     selectedAccount,
     targetContract._address,
-    web3.utils.toTwosComplement(amount),
+    web3.utils.toTwosComplement(targetContractAmount),
     txnData,
     rewardAddress,
     web3.utils.toTwosComplement(rewardAmount),
     web3.utils.toTwosComplement(accountNonce)
   ];
-  const message = soliditySha3(...parts);
-
-  console.log(parts);
 
   // sign transaction
   try {
+    const message = soliditySha3(...parts);
     let signature = await web3.eth.sign(message, selectedAccount);
 
     // console.log('User denied signature');
-
     //   return store.dispatch({
     //     type: 'BOUNCE_RESPONSE',
     //     payload: {
