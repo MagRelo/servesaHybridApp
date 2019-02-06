@@ -23,6 +23,7 @@ export async function bounceTransaction(contract, method, params, amount) {
 
   // get web3 and contracts
   const web3 = store.getState().web3.instance;
+
   const bouncerProxyInstance = store.getState().contracts.bouncerProxy;
   const selectedAccount = store.getState().account.selectedAccount;
 
@@ -59,21 +60,13 @@ export async function bounceTransaction(contract, method, params, amount) {
     const message = soliditySha3(...parts);
     let signature = await web3.eth.sign(message, selectedAccount);
 
-    // console.log('User denied signature');
-    //   return store.dispatch({
-    //     type: 'BOUNCE_RESPONSE',
-    //     payload: {
-    //       serverError: true,
-    //       errorMessage: 'User denied signature'
-    //     }
-    //   });
-
     // send to server
     socket.emit('bounce-txn', {
       signature,
       selectedAccount,
       targetContractAddress: targetContract._address,
-      txnData
+      txnData,
+      targetContractAmount
     });
 
     // set loading state
@@ -89,20 +82,6 @@ export async function bounceTransaction(contract, method, params, amount) {
 
   return;
 }
-
-// export async function sendData(eventType, data) {
-//   store.dispatch({
-//     type: 'BOUNCE_SENT',
-//     payload: {
-//       clientSubmitted: true,
-//       serverRecieved: false,
-//       serverSubmitted: false,
-//       serverComplete: false
-//     }
-//   });
-
-//   socket.emit(eventType, data);
-// }
 
 export async function initSockets() {
   socket = io('/');

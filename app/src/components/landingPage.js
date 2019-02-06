@@ -12,28 +12,22 @@ class LandingPage extends Component {
       <div>
         <h1>Servesa Truffle Box</h1>
         <p>Hybrid web-app setup</p>
-        <h2>Contracts</h2>
+
+        <h2>Demo Pages</h2>
         <ul>
           <li>
-            <a href="https://github.com/austintgriffith/bouncer-proxy/blob/master/README.md">
-              BouncerProxy
-            </a>
-            : submit transactions on behalf of your users.
+            <a href="/auto">Auto Form</a>: generate forms based on contract ABI
           </li>
-          <li>SimpleStorage: simple storage contract to test BouncerProxy</li>
+          <li>
+            <a href="/bounce">Meta-transactions</a>: submit transactions on
+            behalf of your users.
+          </li>
         </ul>
-        <h2>Server features </h2>
-        <ul>
-          <li>HTTP & WebSocket API</li>
-          <li>Authentication middleware using digital signatures</li>
-          <li>Listen for contract events</li>
-          <li>Submit transactions from server</li>
-        </ul>
+
         <h2>Client features </h2>
         <div>
           <div>
             <h3>Redux stores</h3>
-            <p>Load web3, contracts and accounts </p>
             <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
             <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
             <pre>{JSON.stringify(this.props.account, null, 2)}</pre>

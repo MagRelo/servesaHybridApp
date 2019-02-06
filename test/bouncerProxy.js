@@ -56,6 +56,8 @@ contract('BouncerProxy', accounts => {
       web3.utils.toTwosComplement(nonce)
     ];
 
+    console.log('parts', parts);
+
     // hash & sign message
     const message = soliditySha3(...parts);
     let signature = await web3.eth.sign(message, signingAccount);
