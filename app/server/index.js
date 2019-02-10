@@ -65,7 +65,7 @@ dbConnect();
 let io = require('./sockets')(server);
 
 // configure express middleware
-app.use(express.static('build_client'));
+app.use(express.static('build'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: '1mb' }));
 app.use(
@@ -102,7 +102,7 @@ app.post('/api/bouncer', async function(req, res) {
 
 // serve the frontend for all non-api requests
 app.get('/*', function(req, res) {
-  res.sendFile('index.html', { root: './build_client' });
+  res.sendFile('index.html', { root: './build' });
 });
 
 // start server
