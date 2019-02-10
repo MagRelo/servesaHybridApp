@@ -49,7 +49,7 @@ class LandingPage extends Component {
           {this.props.teams.map(team => {
             return (
               <div key={team.label}>
-                <span style={{ float: 'right' }}>
+                <span style={{ float: 'right', lineHeight: '1.7em' }}>
                   <span className="color-label">Projected:</span>{' '}
                   {`$${team.teamTotal.toLocaleString()}`}
                 </span>

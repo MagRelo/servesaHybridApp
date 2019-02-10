@@ -32,11 +32,11 @@ export async function loadLeaderboard() {
     day: 'numeric'
   };
   var updateOptions = {
+    weekday: 'long',
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric'
+    minute: 'numeric'
   };
   const start = new Date(tournament.date.start);
   const end = new Date(tournament.date.end);
