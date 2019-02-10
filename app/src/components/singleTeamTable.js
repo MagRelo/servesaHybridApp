@@ -23,10 +23,12 @@ class TeamTable extends Component {
             {player.player_bio.last_name + ', ' + player.player_bio.first_name}
           </td>
           <td>{player.current_position || player.status}</td>
-          <td>{player.thru}</td>
           <td>{player.today}</td>
-          <td>{player.total}</td>
-          <td>${player.rankings.projected_money_event.toLocaleString()}</td>
+          <td className="hide-mobile">{player.thru}</td>
+          <td className="hide-mobile">{player.total}</td>
+          <td className="hide-mobile">
+            ${player.rankings.projected_money_event.toLocaleString()}
+          </td>
         </tr>
       );
     });
@@ -39,10 +41,10 @@ class TeamTable extends Component {
           <tr>
             <th>Player</th>
             <th>Position</th>
-            <th>Thru</th>
             <th>Today</th>
-            <th>Total</th>
-            <th>Projected</th>
+            <th className="hide-mobile">Thru</th>
+            <th className="hide-mobile">Total</th>
+            <th className="hide-mobile">Projected</th>
           </tr>
         </thead>
         <tbody>{this.generatePlayerRows(this.props.playerData)}</tbody>

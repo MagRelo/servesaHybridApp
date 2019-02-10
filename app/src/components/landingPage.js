@@ -10,17 +10,28 @@ class LandingPage extends Component {
   render() {
     return (
       <div>
-        <h1>Fantasy Golf</h1>
+        <h1>Leaderboard</h1>
 
         {!this.props.teamsLoaded ? (
           <p>Loading...</p>
         ) : (
           <div>
-            <h2>{this.props.tournament.name}</h2>
-            <p>{this.props.tournament.course}</p>
-            <p>{this.props.tournament.tournamentDates}</p>
-            <p>{this.props.tournament.roundState}</p>
-            <p>Last updated: {this.props.tournament.lastUpdated}</p>
+            <div>
+              <h2 style={{ marginBottom: '0.25em' }}>
+                {this.props.tournament.name}
+              </h2>
+
+              <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
+                <span className="color-label">Progress:</span>{' '}
+                {this.props.tournament.roundState}
+              </p>
+              <p style={{ marginTop: '0' }}>
+                <span className="color-label">Last Updated: </span>
+                {this.props.tournament.lastUpdated}
+              </p>
+            </div>
+
+            <br />
             <TeamsTable />
           </div>
         )}
@@ -45,3 +56,12 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LandingPage);
+
+{
+  /* <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
+  {this.props.tournament.course}
+</p>
+<p style={{ marginTop: '0', marginBottom: '0.25em' }}>
+  {this.props.tournament.dates}
+</p> */
+}

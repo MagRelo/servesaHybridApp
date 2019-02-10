@@ -31,6 +31,13 @@ export async function loadLeaderboard() {
     month: 'short',
     day: 'numeric'
   };
+  var updateOptions = {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric'
+  };
   const start = new Date(tournament.date.start);
   const end = new Date(tournament.date.end);
   const tourneyDates =
@@ -58,7 +65,7 @@ export async function loadLeaderboard() {
         dates: tourneyDates,
         course: courses,
         roundState: `Round ${currentRound} - ${currentRoundState}`,
-        lastUpdated: lastUpdated.toLocaleString()
+        lastUpdated: lastUpdated.toLocaleString('en-US', updateOptions)
       },
       teams: teamScores,
       teamsLoaded: true

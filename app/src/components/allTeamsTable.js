@@ -50,7 +50,8 @@ class LandingPage extends Component {
             return (
               <div key={team.label}>
                 <span style={{ float: 'right' }}>
-                  Projected: {`$${team.teamTotal.toLocaleString()}`}
+                  <span className="color-label">Projected:</span>{' '}
+                  {`$${team.teamTotal.toLocaleString()}`}
                 </span>
                 <h3>{team.label}</h3>
 

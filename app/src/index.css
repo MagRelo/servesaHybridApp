@@ -22,6 +22,10 @@ body {
   grid-template-columns: 1fr;
 }
 
+.hide-mobile {
+  display: none;
+}
+
 @media screen and (min-width: 992px) {
   .container {
     max-width: 992px;
@@ -35,14 +39,20 @@ body {
   .row-3 {
     grid-template-columns: 1fr 1fr 1fr;
   }
+
+  .hide-mobile {
+    display: table-cell;
+  }
 }
 
 
 h1,
-h2,
-.blue-label {
-  color: #10547e
+b,
+.color-label {
+  color: #2B6451
 }
+
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -160,7 +170,8 @@ a.pure-button-primary:hover,
 
 .pure-table th {
   border-bottom: solid 1px #cbcbcb;
-  color: #10547e;
+  color: #225041;
+  font-weight: normal;
 }
 
 .pure-table td {
