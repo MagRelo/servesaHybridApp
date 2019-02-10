@@ -42,7 +42,13 @@ async function dbConnect() {
       );
       break;
     } catch (error) {
-      console.log('connection error (', i, ') waiting: ', 1000 * i * 2, ' ms');
+      console.log(
+        'mongo connection error #',
+        i,
+        '- waiting: ',
+        1000 * i * 2,
+        ' ms'
+      );
       await new Promise(resolve => setTimeout(resolve, 1000 * i * 2));
     }
   }
