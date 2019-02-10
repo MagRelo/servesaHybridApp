@@ -8,8 +8,8 @@ import './css/pure-min.css';
 import './index.css';
 
 import LandingPage from 'components/landingPage';
-import Bouncer from 'components/bouncer';
-import Auto from 'components/autoPage';
+import teamPage from 'components/teamPage';
+// import Auto from 'components/autoPage';
 
 class App extends Component {
   state = { accounts: null };
@@ -19,8 +19,7 @@ class App extends Component {
       <div>
         <div className="container">
           <Switch>
-            <Route path="/auto" component={Auto} />
-            <Route path="/bouncer" component={Bouncer} />
+            <Route component={teamPage} path="/team/:teamName" />
             <Route component={LandingPage} />
           </Switch>
         </div>

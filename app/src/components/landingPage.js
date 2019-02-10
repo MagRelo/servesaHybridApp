@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// import { Link } from 'react-router-dom';
 
-import Loader from 'components/loader';
-import AutoForm from 'components/autoForm';
+import TeamsTable from './allTeamsTable';
 
 class LandingPage extends Component {
   state = { accounts: null };
@@ -10,79 +10,20 @@ class LandingPage extends Component {
   render() {
     return (
       <div>
-        <h1>Servesa Truffle Box</h1>
-        <p>Hybrid web-app setup</p>
+        <h1>Fantasy Golf</h1>
 
-        <h2>Demo Pages</h2>
-        <ul>
-          <li>
-            <a href="/auto">Auto Form</a>: generate forms based on contract ABI
-          </li>
-          <li>
-            <a href="/bounce">Meta-transactions</a>: submit transactions on
-            behalf of your users.
-          </li>
-        </ul>
-
-        <h2>Client features </h2>
-        <div>
+        {!this.props.teamsLoaded ? (
+          <p>Loading...</p>
+        ) : (
           <div>
-            <h3>Redux stores</h3>
-            <pre>{JSON.stringify(this.props.web3, null, 2)}</pre>
-            <pre>{JSON.stringify(this.props.contracts, null, 2)}</pre>
-            <pre>{JSON.stringify(this.props.account, null, 2)}</pre>
+            <h2>{this.props.tournament.name}</h2>
+            <p>{this.props.tournament.course}</p>
+            <p>{this.props.tournament.tournamentDates}</p>
+            <p>{this.props.tournament.roundState}</p>
+            <p>Last updated: {this.props.tournament.lastUpdated}</p>
+            <TeamsTable />
           </div>
-
-          <div>
-            <h3>Loader component</h3>
-            <div>
-              <div>
-                <p>Require web3 and contracts:</p>
-                <pre>{`<Loader skipAccounts={true}>
-  <p style={{ textAlign: 'center' }}>(Wrapped content...)</p>
-</Loader>`}</pre>
-
-                <Loader skipAccounts={true}>
-                  <p style={{ textAlign: 'center' }}>(Wrapped content...)</p>
-                </Loader>
-              </div>
-              <div>
-                <p>Require web3, contracts, and account: </p>
-
-                <pre>{`<Loader>
-  <p style={{ textAlign: 'center' }}>(Wrapped content...)</p>
-</Loader>`}</pre>
-                <Loader>
-                  <p style={{ textAlign: 'center' }}>(Wrapped content...)</p>
-                </Loader>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3>AutoForm component</h3>
-            <p>Auto-generate forms for contract functions</p>
-
-            <div>
-              <div>
-                <pre>
-                  {'<AutoForm contract="simpleStorage" method="set" />'}
-                </pre>
-                <Loader>
-                  <AutoForm contract="simpleStorage" method="saveSender" />
-                </Loader>
-              </div>
-              <div>
-                <pre>
-                  {'<AutoForm contract="bouncerProxy" method="forward" />'}
-                </pre>
-                <Loader>
-                  <AutoForm contract="bouncerProxy" method="forward" />
-                </Loader>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -90,28 +31,9 @@ class LandingPage extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3: {
-      web3Ready: state.web3.web3Ready,
-      instance: typeof state.web3.instance,
-      networkReady: state.web3.networkReady,
-      network: state.web3.network,
-      networkID: state.web3.networkID
-    },
-
-    account: {
-      accountsReady: state.account.accountsReady,
-      selectedAccount: state.account.selectedAccount,
-      balance: state.account.balance,
-      accounts: state.account.accounts
-    },
-
-    contracts: {
-      contractsReady: state.contracts.contractsReady,
-      simpleStorage: typeof state.contracts.simpleStorage,
-      bouncerProxy: typeof state.contracts.bouncerProxy
-    },
-
-    showTip: state.web3.showTip
+    tournament: state.pga.tournament,
+    teams: state.pga.teams,
+    teamsLoaded: state.pga.teamsLoaded
   };
 };
 

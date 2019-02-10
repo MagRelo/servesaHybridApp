@@ -38,6 +38,12 @@ body {
 }
 
 
+h1,
+h2,
+.blue-label {
+  color: #10547e
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -154,7 +160,7 @@ a.pure-button-primary:hover,
 
 .pure-table th {
   border-bottom: solid 1px #cbcbcb;
-  color: #648599;
+  color: #10547e;
 }
 
 .pure-table td {
