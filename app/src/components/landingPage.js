@@ -22,7 +22,7 @@ class LandingPage extends Component {
               </h2>
 
               <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
-                <span className="color-label">Progress:</span>{' '}
+                <span className="color-label">Status:</span>{' '}
                 {this.props.tournament.roundState}
               </p>
               <p style={{ marginTop: '0' }}>
@@ -30,7 +30,6 @@ class LandingPage extends Component {
                 {this.props.tournament.lastUpdated}
               </p>
             </div>
-            <hr />
             <TeamsTable />
           </div>
         )}
