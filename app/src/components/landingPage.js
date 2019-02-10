@@ -30,8 +30,7 @@ class LandingPage extends Component {
                 {this.props.tournament.lastUpdated}
               </p>
             </div>
-
-            <br />
+            <hr />
             <TeamsTable />
           </div>
         )}
