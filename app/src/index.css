@@ -46,10 +46,12 @@ body {
 }
 
 
-h1,
-b,
+h1 {
+  color: #005E40
+}
+
 .color-label {
-  color: #2B6451
+  color: #005E40
 }
 
 
@@ -170,7 +172,7 @@ a.pure-button-primary:hover,
 
 .pure-table th {
   border-bottom: solid 1px #cbcbcb;
-  color: #225041;
+  color: #005E40;
   font-weight: normal;
 }
 

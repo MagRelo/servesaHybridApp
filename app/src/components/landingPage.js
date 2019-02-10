@@ -56,12 +56,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LandingPage);
-
-{
-  /* <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
-  {this.props.tournament.course}
-</p>
-<p style={{ marginTop: '0', marginBottom: '0.25em' }}>
-  {this.props.tournament.dates}
-</p> */
-}
