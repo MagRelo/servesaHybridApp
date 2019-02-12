@@ -2,7 +2,7 @@ import store from 'state/store';
 
 export async function loadLeaderboard() {
   const leaderboard = await fetch(
-    'https://statdata.pgatour.com/r/005/2019/leaderboard-v2.json'
+    'https://statdata.pgatour.com/r/007/2019/leaderboard-v2.json'
   ).then(response => response.json());
 
   const allPlayers = await fetch(
