@@ -22,9 +22,6 @@ body {
   grid-template-columns: 1fr;
 }
 
-.hide-mobile {
-  display: none;
-}
 
 @media screen and (min-width: 992px) {
   .container {
@@ -40,9 +37,6 @@ body {
     grid-template-columns: 1fr 1fr 1fr;
   }
 
-  .hide-mobile {
-    display: table-cell;
-  }
 }
 
 
@@ -201,6 +195,25 @@ a.pure-button-primary:hover,
 .pure-table.order-table td {
   border-bottom: solid 1px lightgray;
   padding: .3em 1em;
+}
+
+
+.pure-table td {
+  font-size: smaller;
+}
+
+.hide-mobile {
+  display: none;
+}
+
+@media screen and (min-width: 800px) {
+  .pure-table td {
+    font-size: initial;
+  }
+
+  .hide-mobile {
+    display: table-cell;
+  }
 }
 
 /* forms */

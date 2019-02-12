@@ -10,7 +10,7 @@ class TeamTable extends Component {
           </td>
           <td>{player.current_position || player.status}</td>
           <td>{player.today}</td>
-          <td className="hide-mobile">{player.thru}</td>
+          <td> {player.thru}</td>
           <td className="hide-mobile">{player.total}</td>
           <td className="hide-mobile">
             ${player.rankings.projected_money_event.toLocaleString()}
@@ -28,7 +28,7 @@ class TeamTable extends Component {
             <th>Player</th>
             <th>Position</th>
             <th>Today</th>
-            <th className="hide-mobile">Thru</th>
+            <th>Thru</th>
             <th className="hide-mobile">Total</th>
             <th className="hide-mobile">Projected</th>
           </tr>
