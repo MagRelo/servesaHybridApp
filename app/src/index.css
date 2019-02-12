@@ -206,7 +206,7 @@ a.pure-button-primary:hover,
   display: none;
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 650px) {
   .pure-table td {
     font-size: initial;
   }
