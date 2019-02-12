@@ -1,61 +1,40 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { Link } from 'react-router-dom';
 
 class LandingPage extends Component {
-  state = { name: '' };
+  state = {
+    team: null,
+    teamName: '',
+    playerData: [],
+    players: [],
+    teamTotal: 0
+  };
 
   componentDidMount() {
-    // console.log(this.props.match.params.teamName);
+    this.updateTeam();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.teams !== prevProps.teams) {
+      this.updateTeam();
+    }
+  }
+
+  updateTeam() {
+    console.log('updating team...');
 
     const slug = this.props.match.url;
-
-    // find player in money list
     const team = this.props.teams.find(team => {
       return team.slug === slug;
     });
 
     if (team) {
       this.setState({
-        name: team.label,
-        slug: team.slug
-      });
-    } else {
-      console.log('not found');
-    }
-
-    // load team
-  }
-
-  generatePlayerRows() {
-    const team = this.props.teams.find(team => {
-      return team.slug === this.state.slug;
-    });
-
-    if (team) {
-      return team.playerData.map((player, index) => {
-        if (player) {
-          return (
-            <tr key={index}>
-              <td>
-                {player.player_bio.last_name +
-                  ', ' +
-                  player.player_bio.first_name}
-              </td>
-              <td>{player.current_position}</td>
-              <td>{player.today}</td>
-              <td>{player.total}</td>
-            </tr>
-          );
-        }
-
-        return (
-          <tr key={index}>
-            <td>{'(not playing)'}</td>
-            <td />
-            <td />
-          </tr>
-        );
+        team: team,
+        teamName: team.label,
+        teamTotal: team.teamTotal,
+        playerData: team.playerData,
+        players: team.players
       });
     }
   }
@@ -63,27 +42,34 @@ class LandingPage extends Component {
   render() {
     return (
       <div>
-        <h1>{this.state.name}</h1>
+        <h1>{this.state.teamName}</h1>
 
         {!this.props.teamsLoaded ? (
           <p>Loading....</p>
         ) : (
           <div>
-            <h2>This Week</h2>
-            <p>comins goon</p>
-            <h2>YTD Earnings</h2>
-            <p>Team Total: {}</p>
+            <h2>Roster</h2>
             <table className="pure-table">
               <thead>
                 <tr>
+                  <th>Group</th>
                   <th>Player</th>
-                  <th>Position</th>
-                  <th>Today</th>
-                  <th>Total</th>
+                  <th>Active</th>
                 </tr>
               </thead>
-
-              <tbody>{this.generatePlayerRows()}</tbody>
+              <tbody>
+                {this.state.players.map((player, index) => {
+                  return (
+                    <tr key={player.pid}>
+                      <td>{index + 1}</td>
+                      <td>{player.nameL + ', ' + player.nameF}</td>
+                      <td className="color-label">
+                        {player.active ? '✔' : ''}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         )}
@@ -94,8 +80,9 @@ class LandingPage extends Component {
 
 const mapStateToProps = state => {
   return {
-    teams: state.team.teams,
-    teamsLoaded: state.team.teamsLoaded
+    teams: state.pga.teams,
+    teamsLoaded: state.pga.teamsLoaded,
+    tournament: state.pga.tournament
   };
 };
 

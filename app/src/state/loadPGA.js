@@ -5,32 +5,20 @@ export async function loadLeaderboard() {
     'https://statdata.pgatour.com/r/005/2019/leaderboard-v2.json'
   ).then(response => response.json());
 
+  const allPlayers = await fetch(
+    'https://statdata.pgatour.com/players/player.json'
+  ).then(response => response.json());
+
+  // Leaderboard
   const leaderboardPlayers = leaderboard.leaderboard.players;
   const currentRound = leaderboard.leaderboard.current_round;
   const currentRoundState = leaderboard.leaderboard.round_state;
   const lastUpdated = new Date(leaderboard.last_updated);
 
-  const schedule = await fetch(
-    'https://statdata.pgatour.com/r/current/schedule-v2.json'
-  ).then(response => response.json());
+  // merge scores into teams and get totals
+  const teams = store.getState().team.teams;
+  const teamScores = teamTotals(teams, allPlayers.plrs, leaderboardPlayers);
 
-  const thisWeek = schedule.thisWeek;
-  const tourYear = schedule.years.find(year => {
-    return year.year === '2019';
-  });
-  const pgaSchedule = tourYear.tours.find(tour => {
-    return tour.tourCodeLc === 'r';
-  });
-  const tournament = pgaSchedule.trns.find(event => {
-    return event.date.weekNumber === thisWeek.weekNumber;
-  });
-
-  // dates
-  var options = {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric'
-  };
   var updateOptions = {
     weekday: 'long',
     month: 'short',
@@ -38,32 +26,12 @@ export async function loadLeaderboard() {
     hour: 'numeric',
     minute: 'numeric'
   };
-  const start = new Date(tournament.date.start);
-  const end = new Date(tournament.date.end);
-  const tourneyDates =
-    start.toLocaleDateString('en-US', options) +
-    ' - ' +
-    end.toLocaleDateString('en-US', options);
-
-  // combine courses into a single string
-  const courses = tournament.courses.reduce((acc, course, index) => {
-    if (index === 0) {
-      return acc + course.courseName;
-    }
-    return acc + ', ' + course.courseName;
-  }, '');
-
-  // merge scores into teams and get totals
-  const teams = store.getState().team.teams;
-  const teamScores = teamTotals(leaderboardPlayers, teams);
 
   store.dispatch({
     type: 'LOAD_PGA_DATA',
     payload: {
       tournament: {
-        name: tournament.trnName.official,
-        dates: tourneyDates,
-        course: courses,
+        name: leaderboard.leaderboard.tournament_name,
         roundState: `Round ${currentRound} - ${currentRoundState}`,
         lastUpdated: lastUpdated.toLocaleString('en-US', updateOptions)
       },
@@ -73,43 +41,59 @@ export async function loadLeaderboard() {
   });
 }
 
-function teamTotals(leaderboard, teams) {
-  const newTeams = teams.map(team => {
+function teamTotals(teams, playerList, leaderboard) {
+  // each team
+  const hydratedTeams = teams.map(team => {
+    // get players from leaderboard
+    let activePlayers = [];
+    let allPlayers = [];
+
     // each player
-    const players = team.players.map((teamPlayer, index) => {
-      const playerObj = leaderboard.find(listItem => {
-        return listItem.player_id === teamPlayer;
+    team.players.forEach((teamPlayer, index) => {
+      // add player data
+      const playerObj = playerList.find(listItem => {
+        return listItem.pid === teamPlayer;
       });
 
-      return playerObj;
-    });
-
-    // asdf
-    let teamPlayers = [];
-    players.forEach((player, index) => {
-      if (player) {
-        teamPlayers.push(player);
+      // if found, add to active players
+      playerObj.active = false;
+      const activePlayerObj = leaderboard.find(listItem => {
+        return listItem.player_id === teamPlayer;
+      });
+      if (activePlayerObj) {
+        playerObj.leaderBoard = activePlayerObj;
+        playerObj.active = true;
+        activePlayers.push(activePlayerObj);
       }
+
+      // add full player to array
+      allPlayers.push(playerObj);
     });
 
-    const teamTotal = teamPlayers.reduce((acc, player, index) => {
+    const teamTotal = activePlayers.reduce((acc, player, index) => {
       return acc + player.rankings.projected_money_event;
     }, 0);
 
+    // sort leaderboard players
+    activePlayers.sort((a, b) => {
+      return a.total - b.total;
+    });
+
     // add to team
+    team.players = allPlayers;
+    team.playerData = activePlayers;
+    team.activePlayers = activePlayers.length;
     team.teamTotal = teamTotal;
-    team.playerData = players;
-    team.activePlayers = players.length;
 
     return team;
   });
 
   // sort
-  newTeams.sort((a, b) => {
+  hydratedTeams.sort((a, b) => {
     return b.teamTotal - a.teamTotal;
   });
 
-  return newTeams;
+  return hydratedTeams;
 }
 
 // Page: 101  - Description: Driving Distance

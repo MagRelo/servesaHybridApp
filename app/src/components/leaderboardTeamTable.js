@@ -1,22 +1,8 @@
 import React, { Component } from 'react';
 
 class TeamTable extends Component {
-  generatePlayerRows(playerData) {
-    let teamPlayers = [];
-
-    playerData.forEach((player, index) => {
-      if (player) {
-        teamPlayers.push(player);
-      }
-    });
-
-    teamPlayers.sort((a, b) => {
-      return (
-        b.rankings.projected_money_event - a.rankings.projected_money_event
-      );
-    });
-
-    return teamPlayers.map((player, index) => {
+  generatePlayerRows() {
+    return this.props.playerData.map((player, index) => {
       return (
         <tr key={index}>
           <td>
@@ -47,7 +33,7 @@ class TeamTable extends Component {
             <th className="hide-mobile">Projected</th>
           </tr>
         </thead>
-        <tbody>{this.generatePlayerRows(this.props.playerData)}</tbody>
+        <tbody>{this.generatePlayerRows()}</tbody>
       </table>
     );
   }

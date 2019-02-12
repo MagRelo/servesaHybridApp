@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 // import { Link } from 'react-router-dom';
 
 import TeamsTable from './allTeamsTable';
+import LeaderboardInfo from './leaderboardInfo';
 
 class LandingPage extends Component {
   state = { accounts: null };
@@ -16,20 +17,7 @@ class LandingPage extends Component {
           <p>Loading...</p>
         ) : (
           <div>
-            <div>
-              <h2 style={{ marginBottom: '0.25em' }}>
-                {this.props.tournament.name}
-              </h2>
-
-              <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
-                <span className="color-label">Status:</span>{' '}
-                {this.props.tournament.roundState}
-              </p>
-              <p style={{ marginTop: '0' }}>
-                <span className="color-label">Last Updated: </span>
-                {this.props.tournament.lastUpdated}
-              </p>
-            </div>
+            <LeaderboardInfo />
             <TeamsTable />
           </div>
         )}
