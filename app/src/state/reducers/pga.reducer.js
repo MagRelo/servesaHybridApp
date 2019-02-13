@@ -14,6 +14,10 @@ const AccountReducer = (state = initialState, action) => {
     return Object.assign({}, state, action.payload);
   }
 
+  if (action.type === 'UPDATE_PGA_DATA') {
+    return Object.assign({}, state, action.payload);
+  }
+
   return state;
 };
 

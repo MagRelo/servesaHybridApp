@@ -81,8 +81,7 @@ class LandingPage extends Component {
 const mapStateToProps = state => {
   return {
     teams: state.pga.teams,
-    teamsLoaded: state.pga.teamsLoaded,
-    tournament: state.pga.tournament
+    teamsLoaded: state.pga.teamsLoaded
   };
 };
 

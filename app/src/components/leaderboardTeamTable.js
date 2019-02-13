@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class TeamTable extends Component {
   generatePlayerRows() {
-    return this.props.playerData.map((player, index) => {
+    return this.props.activePlayers.map((player, index) => {
       return (
         <tr key={index}>
           <td>

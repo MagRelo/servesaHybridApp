@@ -153,13 +153,13 @@ a:visited {
 
 a.pure-button-primary,
 .pure-button-primary {
-  background-color: #007adb;
+  background-color: #005E40;
   color: white;
 }
 
 a.pure-button-primary:hover,
 .pure-button-primary:hover {
-  background-color: #007adb;
+  background-color: #005E40;
   color: white;
 }
 
@@ -276,4 +276,21 @@ form>p {
 .form-display-box {
   font-size: smaller;
   padding-left: 1em;
+}
+
+.refresh-button {
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+  text-transform: uppercase;
+  font-size: small;
+  margin-bottom: 0.3em;
+  background-color: #ffffff;
+  border: 1px #cbcbcb solid;
+  color: #78888a;
+  /* border-radius: 5px; */
+}
+
+.refresh-button:hover {
+  background-color: #ffffff;
+  background-image: none;
 }

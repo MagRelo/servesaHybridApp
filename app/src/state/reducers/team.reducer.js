@@ -50,7 +50,8 @@ const teams = [
     label: 'Steve',
     teamTotal: 0,
     slug: '/team/steve',
-    players: [
+    activePlayers: [],
+    playerList: [
       '30925',
       '22405',
       '47959',
@@ -67,7 +68,8 @@ const teams = [
     label: 'Jerry',
     teamTotal: 0,
     slug: '/team/jerry',
-    players: [
+    activePlayers: [],
+    playerList: [
       '33448',
       '22405',
       '47959',
@@ -84,7 +86,8 @@ const teams = [
     label: 'Matt L',
     teamTotal: 0,
     slug: '/team/mattl',
-    players: [
+    activePlayers: [],
+    playerList: [
       '33448',
       '36689',
       '30911',
@@ -101,7 +104,8 @@ const teams = [
     label: 'Mike',
     teamTotal: 0,
     slug: '/team/mike',
-    players: [
+    activePlayers: [],
+    playerList: [
       '30925',
       '32102',
       '29725',
@@ -118,7 +122,8 @@ const teams = [
     label: 'Ryan G',
     teamTotal: 0,
     slug: '/team/ryang',
-    players: [
+    activePlayers: [],
+    playerList: [
       '30925',
       '22405',
       '29725',
@@ -135,7 +140,8 @@ const teams = [
     label: 'Gaspar',
     teamTotal: 0,
     slug: '/team/gaspar',
-    players: [
+    activePlayers: [],
+    playerList: [
       '30925',
       '36689',
       '29725',
@@ -152,7 +158,8 @@ const teams = [
     label: 'Woogs',
     teamTotal: 0,
     slug: '/team/woogs',
-    players: [
+    activePlayers: [],
+    playerList: [
       '08793',
       '32102',
       '30911',
@@ -169,7 +176,8 @@ const teams = [
     label: 'Shane',
     teamTotal: 0,
     slug: '/team/shane',
-    players: [
+    activePlayers: [],
+    playerList: [
       '33448',
       '46970',
       '29725',
@@ -186,7 +194,8 @@ const teams = [
     label: 'Lucas',
     teamTotal: 0,
     slug: '/team/lucas',
-    players: [
+    activePlayers: [],
+    playerList: [
       '33448',
       '22405',
       '29725',
@@ -203,7 +212,8 @@ const teams = [
     label: 'Ryan',
     teamTotal: 0,
     slug: '/team/ryan',
-    players: [
+    activePlayers: [],
+    playerList: [
       '08793',
       '32102',
       '47959',
@@ -220,7 +230,8 @@ const teams = [
     label: 'Jake',
     teamTotal: 0,
     slug: '/team/jake',
-    players: [
+    activePlayers: [],
+    playerList: [
       '30925',
       '46970',
       '29725',
@@ -237,7 +248,8 @@ const teams = [
     label: 'Will',
     teamTotal: 0,
     slug: '/team/will',
-    players: [
+    activePlayers: [],
+    playerList: [
       '33448',
       '22405',
       '32839',
@@ -254,7 +266,8 @@ const teams = [
     label: 'Brad',
     teamTotal: 0,
     slug: '/team/brad',
-    players: [
+    activePlayers: [],
+    playerList: [
       '33448',
       '22405',
       '29725',
@@ -271,7 +284,8 @@ const teams = [
     label: 'Matt',
     teamTotal: 0,
     slug: '/team/matt',
-    players: [
+    activePlayers: [],
+    playerList: [
       '30925',
       '32102',
       '47959',

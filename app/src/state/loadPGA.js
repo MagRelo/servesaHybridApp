@@ -1,6 +1,13 @@
 import store from 'state/store';
 
 export async function loadLeaderboard() {
+  store.dispatch({
+    type: 'LOAD_PGA_DATA',
+    payload: {
+      teamsLoaded: false
+    }
+  });
+
   const leaderboard = await fetch(
     'https://statdata.pgatour.com/r/007/2019/leaderboard-v2.json'
   ).then(response => response.json());
@@ -20,7 +27,7 @@ export async function loadLeaderboard() {
   const teamScores = teamTotals(teams, allPlayers.plrs, leaderboardPlayers);
 
   var updateOptions = {
-    weekday: 'long',
+    weekday: 'short',
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
@@ -28,7 +35,7 @@ export async function loadLeaderboard() {
   };
 
   store.dispatch({
-    type: 'LOAD_PGA_DATA',
+    type: 'UPDATE_PGA_DATA',
     payload: {
       tournament: {
         name: leaderboard.leaderboard.tournament_name,
@@ -49,7 +56,7 @@ function teamTotals(teams, playerList, leaderboard) {
     let allPlayers = [];
 
     // each player
-    team.players.forEach((teamPlayer, index) => {
+    team.playerList.forEach((teamPlayer, index) => {
       // add player data
       const playerObj = playerList.find(listItem => {
         return listItem.pid === teamPlayer;
@@ -81,8 +88,7 @@ function teamTotals(teams, playerList, leaderboard) {
 
     // add to team
     team.players = allPlayers;
-    team.playerData = activePlayers;
-    team.activePlayers = activePlayers.length;
+    team.activePlayers = activePlayers;
     team.teamTotal = teamTotal;
 
     return team;

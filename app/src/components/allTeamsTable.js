@@ -8,40 +8,6 @@ import TeamTable from './leaderboardTeamTable';
 class LandingPage extends Component {
   state = { name: '' };
 
-  componentDidMount() {
-    // console.log(this.props.match.params.teamName);
-  }
-
-  // generatePlayerRows(playerData) {
-  //   let teamPlayers = [];
-
-  //   playerData.forEach((player, index) => {
-  //     if (player) {
-  //       teamPlayers.push(player);
-  //     }
-  //   });
-
-  //   teamPlayers.sort((a, b) => {
-  //     return (
-  //       b.rankings.projected_money_event - a.rankings.projected_money_event
-  //     );
-  //   });
-
-  //   return teamPlayers.map((player, index) => {
-  //     return (
-  //       <tr key={index}>
-  //         <td>
-  //           {player.player_bio.last_name + ', ' + player.player_bio.first_name}
-  //         </td>
-  //         <td>{player.current_position}</td>
-  //         <td>{player.today}</td>
-  //         <td>{player.total}</td>
-  //         <td>${player.rankings.projected_money_event.toLocaleString()}</td>
-  //       </tr>
-  //     );
-  //   });
-  // }
-
   render() {
     return (
       <div>
@@ -56,11 +22,11 @@ class LandingPage extends Component {
                   {`$${team.teamTotal.toLocaleString()}`}
                 </span>
 
-                <Link to={team.slug}>
-                  <h3>{team.label}</h3>
-                </Link>
+                <h3>
+                  <Link to={team.slug}>{team.label}</Link>
+                </h3>
 
-                <TeamTable playerData={team.playerData} />
+                <TeamTable activePlayers={team.activePlayers} />
               </div>
             );
           })}

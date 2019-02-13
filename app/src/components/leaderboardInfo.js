@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { loadLeaderboard } from 'state/loadPGA';
+
 class LeaderboardInfo extends Component {
   render() {
     return (
@@ -11,10 +13,19 @@ class LeaderboardInfo extends Component {
           <span className="color-label">Status:</span>{' '}
           {this.props.tournament.roundState}
         </p>
-        <p style={{ marginTop: '0' }}>
+        <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
           <span className="color-label">Last Updated: </span>
           {this.props.tournament.lastUpdated}
         </p>
+
+        <button
+          className="pure-button refresh-button"
+          onClick={() => {
+            this.props.loadLeaderboard();
+          }}
+        >
+          Refresh
+        </button>
       </div>
     );
   }
@@ -27,7 +38,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    loadLeaderboard: () => {
+      return loadLeaderboard();
+    }
+  };
 };
 
 export default connect(
