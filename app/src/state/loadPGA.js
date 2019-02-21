@@ -9,7 +9,7 @@ export async function loadLeaderboard() {
   });
 
   const leaderboard = await fetch(
-    'https://statdata.pgatour.com/r/007/2019/leaderboard-v2.json'
+    'https://statdata.pgatour.com/r/473/2019/leaderboard-v2.json'
   ).then(response => response.json());
 
   const allPlayers = await fetch(
@@ -83,7 +83,9 @@ function teamTotals(teams, playerList, leaderboard) {
 
     // sort leaderboard players
     activePlayers.sort((a, b) => {
-      return a.total - b.total;
+      return (
+        b.rankings.projected_money_event - a.rankings.projected_money_event
+      );
     });
 
     // add to team

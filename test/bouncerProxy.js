@@ -77,11 +77,11 @@ contract('BouncerProxy', accounts => {
     // Check results
     // 1) the value in simplestorage was updated
     // 2) it was updated by bouncerProxy address, not the signingAccount
-    currentValue = await SimpleStorageInstance.value.call({
+    const currentValue = await SimpleStorageInstance.value.call({
       from: deployer
     });
     assert.equal(currentValue, 100, 'Value not updated');
-    lastUpdatedBy = await SimpleStorageInstance.lastUpdatedBy.call({
+    const lastUpdatedBy = await SimpleStorageInstance.lastUpdatedBy.call({
       from: deployer
     });
     assert.equal(
