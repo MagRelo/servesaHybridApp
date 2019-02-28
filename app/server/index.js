@@ -61,14 +61,14 @@ async function dbConnect() {
 
   return;
 }
-dbConnect();
+// dbConnect();
 
 // *
 // Server
 // *
 
 // sockets routing
-let io = require('./sockets')(server);
+// let io = require('./sockets')(server);
 
 // configure express middleware
 app.use(express.static('build'));
@@ -84,26 +84,10 @@ app.use(
 );
 
 // http routing
-app.post('/api/bouncer', async function(req, res) {
+app.get('/api/data', async function(req, res) {
   // input validation
-  // const userAddress = recover()
 
-  // test web3
-  const {
-    web3Connected,
-    network,
-    networkId,
-    serverAccount,
-    serverAccountBalance
-  } = await getWeb3.getWeb3();
-
-  res.status(200).send({
-    web3Connected,
-    network,
-    networkId,
-    serverAccount,
-    serverAccountBalance
-  });
+  res.status(200).send({ code: process.env.TOURNAMENT_CODE });
 });
 
 // serve the frontend for all non-api requests

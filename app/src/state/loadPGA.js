@@ -8,13 +8,31 @@ export async function loadLeaderboard() {
     }
   });
 
+  const tournamentData = await fetch('/api/data').then(response => {
+    if (response.status === 200) {
+      return response.json();
+    }
+  });
+
+  console.log('Tournament Code:', tournamentData.code);
+
   const leaderboard = await fetch(
-    'https://statdata.pgatour.com/r/473/2019/leaderboard-v2.json'
-  ).then(response => response.json());
+    `https://statdata.pgatour.com/r/${
+      tournamentData.code
+    }/2019/leaderboard-v2.json`
+  ).then(response => {
+    if (response.status === 200) {
+      return response.json();
+    }
+  });
 
   const allPlayers = await fetch(
     'https://statdata.pgatour.com/players/player.json'
-  ).then(response => response.json());
+  ).then(response => {
+    if (response.status === 200) {
+      return response.json();
+    }
+  });
 
   // Leaderboard
   const leaderboardPlayers = leaderboard.leaderboard.players;
