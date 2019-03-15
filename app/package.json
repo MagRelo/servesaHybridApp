@@ -5,8 +5,6 @@
   "proxy": "http://localhost:8080",
   "dependencies": {
     "dotenv": "^6.2.0",
-    "eth-sig-util": "^2.1.0",
-    "ethereumjs-util": "^6.0.0",
     "express": "^4.16.4",
     "mongoose": "^5.4.5",
     "morgan": "^1.9.1",
@@ -20,7 +18,6 @@
     "redux-thunk": "^2.3.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
-    "web3": "^1.0.0-beta.37",
     "websocket": "^1.0.28"
   },
   "scripts": {

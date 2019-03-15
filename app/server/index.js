@@ -7,8 +7,8 @@ const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
-const getWeb3 = require('./utils/getWeb3');
-const sigUtil = require('eth-sig-util');
+// const getWeb3 = require('./utils/getWeb3');
+// const sigUtil = require('eth-sig-util');
 // const ethUtil = require('ethereumjs-util');
 
 // *
@@ -104,30 +104,30 @@ server.listen(8080, () => {
 // helpers
 // *
 
-function signatureAuth(req, res, next) {
-  // check for header
-  if (!req.headers['x-servesa']) {
-    return res.status(401).send('Unauthorized');
-  }
+// function signatureAuth(req, res, next) {
+//   // check for header
+//   if (!req.headers['x-servesa']) {
+//     return res.status(401).send('Unauthorized');
+//   }
 
-  // parse header object
-  const authObject = JSON.parse(req.headers['x-servesa']);
-  if (!authObject.message || !authObject.signature) {
-    return res.status(401).send('Unauthorized');
-  }
+//   // parse header object
+//   const authObject = JSON.parse(req.headers['x-servesa']);
+//   if (!authObject.message || !authObject.signature) {
+//     return res.status(401).send('Unauthorized');
+//   }
 
-  // pass along userAddress and message
-  req.userAddress = recover(authObject.message, authObject.signature);
-  req.userMessage = authObject.message;
+//   // pass along userAddress and message
+//   req.userAddress = recover(authObject.message, authObject.signature);
+//   req.userMessage = authObject.message;
 
-  // call next middleware function
-  next();
-}
+//   // call next middleware function
+//   next();
+// }
 
-function recover(message, signature) {
-  // recover public key
-  return sigUtil.recoverPersonalSignature({
-    data: message,
-    sig: signature
-  });
-}
+// function recover(message, signature) {
+//   // recover public key
+//   return sigUtil.recoverPersonalSignature({
+//     data: message,
+//     sig: signature
+//   });
+// }
