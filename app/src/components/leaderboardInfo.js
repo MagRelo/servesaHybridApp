@@ -7,7 +7,7 @@ class LeaderboardInfo extends Component {
   render() {
     return (
       <div>
-        <h2 style={{ marginBottom: '0.25em' }}>{this.props.tournament.name}</h2>
+        <h1 style={{ marginBottom: '0.25em' }}>{this.props.tournament.name}</h1>
 
         <p style={{ marginTop: '0', marginBottom: '0.25em' }}>
           <span className="color-label">Status:</span>{' '}
@@ -17,15 +17,6 @@ class LeaderboardInfo extends Component {
           <span className="color-label">Last Updated: </span>
           {this.props.tournament.lastUpdated}
         </p>
-
-        <button
-          className="pure-button refresh-button"
-          onClick={() => {
-            this.props.loadLeaderboard();
-          }}
-        >
-          Refresh
-        </button>
       </div>
     );
   }

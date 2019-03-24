@@ -2,68 +2,92 @@ import store from 'state/store';
 
 export async function loadLeaderboard() {
   store.dispatch({
-    type: 'LOAD_PGA_DATA',
+    type: 'LOADING_PGA_DATA',
     payload: {
       teamsLoaded: false
     }
   });
 
-  const tournamentData = await fetch('/api/data').then(response => {
-    if (response.status === 200) {
-      return response.json();
-    }
-  });
-
-  console.log('Tournament Code:', tournamentData.code);
-
-  const leaderboard = await fetch(
-    `https://statdata.pgatour.com/r/${
-      tournamentData.code
-    }/2019/leaderboard-v2.json`
-  ).then(response => {
-    if (response.status === 200) {
-      return response.json();
-    }
-  });
-
-  const allPlayers = await fetch(
-    'https://statdata.pgatour.com/players/player.json'
-  ).then(response => {
-    if (response.status === 200) {
-      return response.json();
-    }
-  });
-
-  // Leaderboard
-  const leaderboardPlayers = leaderboard.leaderboard.players;
-  const currentRound = leaderboard.leaderboard.current_round;
-  const currentRoundState = leaderboard.leaderboard.round_state;
-  const lastUpdated = new Date(leaderboard.last_updated);
-
-  // merge scores into teams and get totals
-  const teams = store.getState().team.teams;
-  const teamScores = teamTotals(teams, allPlayers.plrs, leaderboardPlayers);
-
-  var updateOptions = {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  };
+  let { name, roundState, lastUpdated, players } = await getLeaderboard();
+  let teams = await getTeams(players);
 
   store.dispatch({
     type: 'UPDATE_PGA_DATA',
     payload: {
       tournament: {
-        name: leaderboard.leaderboard.tournament_name,
-        roundState: `Round ${currentRound} - ${currentRoundState}`,
-        lastUpdated: lastUpdated.toLocaleString('en-US', updateOptions)
+        name: name,
+        roundState: roundState,
+        lastUpdated: lastUpdated
       },
-      teams: teamScores,
+      teams: teams,
       teamsLoaded: true
     }
   });
+}
+
+async function getLeaderboard() {
+  let leaderboard = null;
+
+  try {
+    // get tournament ID from server
+    const tournamentData = await fetch('/api/data').then(async response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        throw Error('API error');
+      }
+    });
+
+    console.log('Tournament Code:', tournamentData.code);
+
+    // get leaderboard
+    leaderboard = await fetch(
+      `https://statdata.pgatour.com/r/${
+        tournamentData.code
+      }/2019/leaderboard-v2.json`
+    ).then(response => {
+      if (response.status === 200) {
+        return response.json();
+      }
+    });
+  } catch (error) {
+    alert(`Leaderboard Error \n ${error.message}`);
+  }
+
+  const currentRound = leaderboard.leaderboard.current_round;
+  const currentRoundState = leaderboard.leaderboard.round_state;
+  const lastUpdated = new Date(leaderboard.last_updated);
+
+  return {
+    name: leaderboard.leaderboard.tournament_name,
+    roundState: `Round ${currentRound} - ${currentRoundState}`,
+    lastUpdated: lastUpdated.toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    }),
+    players: leaderboard.leaderboard.players
+  };
+}
+
+async function getTeams(leaderboardPlayers) {
+  try {
+    const allPlayers = await fetch(
+      'https://statdata.pgatour.com/players/player.json'
+    ).then(response => {
+      if (response.status === 200) {
+        return response.json();
+      }
+    });
+
+    // merge scores into teams and get totals
+    const teams = store.getState().team.teams;
+    return teamTotals(teams, allPlayers.plrs, leaderboardPlayers);
+  } catch (error) {
+    alert(`Players Error \n ${error.message}`);
+  }
 }
 
 function teamTotals(teams, playerList, leaderboard) {

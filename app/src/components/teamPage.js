@@ -21,8 +21,6 @@ class LandingPage extends Component {
   }
 
   updateTeam() {
-    console.log('updating team...');
-
     const slug = this.props.match.url;
     const team = this.props.teams.find(team => {
       return team.slug === slug;
@@ -48,7 +46,6 @@ class LandingPage extends Component {
           <p>Loading....</p>
         ) : (
           <div>
-            <h2>Roster</h2>
             <table className="pure-table">
               <thead>
                 <tr>

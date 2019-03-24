@@ -10,7 +10,7 @@ const initialState = {
 };
 
 const AccountReducer = (state = initialState, action) => {
-  if (action.type === 'LOAD_PGA_DATA') {
+  if (action.type === 'LOADING_PGA_DATA') {
     return Object.assign({}, state, action.payload);
   }
 
