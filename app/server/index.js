@@ -56,12 +56,12 @@ async function dbConnect() {
   if (!conn) {
     process.exit(-1);
   } else {
-    console.log('Mongoose connected.');
+    console.log('Mongoose connected to database:', process.env.DB_NAME);
   }
 
   return;
 }
-// dbConnect();
+dbConnect();
 
 // *
 // Server
@@ -87,7 +87,27 @@ app.use(
 app.get('/api/data', async function(req, res) {
   // input validation
 
-  res.status(200).send({ code: process.env.TOURNAMENT_CODE });
+  const config = await mongoose.connection.db.collection('config').findOne({});
+
+  res.status(200).send(config);
+});
+
+app.post('/api/id', async function(req, res) {
+  // input validation
+
+  console.log(req.body.tournamentId);
+
+  mongoose.connection.db.collection('config').updateMany(
+    {},
+    {
+      $set: {
+        tournamentId: req.body.tournamentId
+      }
+    },
+    { multi: true, upsert: true }
+  );
+
+  res.status(200).send({ tournamentId: req.body.tournamentId });
 });
 
 // serve the frontend for all non-api requests

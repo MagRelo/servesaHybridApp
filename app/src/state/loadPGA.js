@@ -31,45 +31,50 @@ async function getLeaderboard() {
   try {
     // get tournament ID from server
     const tournamentData = await fetch('/api/data').then(async response => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        throw Error('API error');
-      }
+      if (response.status !== 200) throw Error('API error - request');
+      return response.json();
     });
 
-    console.log('Tournament Code:', tournamentData.code);
+    if (!tournamentData.tournamentId) throw Error('API error - data');
+
+    console.log('Tournament Code:', tournamentData.tournamentId);
 
     // get leaderboard
     leaderboard = await fetch(
       `https://statdata.pgatour.com/r/${
-        tournamentData.code
+        tournamentData.tournamentId
       }/2019/leaderboard-v2.json`
     ).then(response => {
       if (response.status === 200) {
         return response.json();
       }
     });
+
+    const currentRound = leaderboard.leaderboard.current_round;
+    const currentRoundState = leaderboard.leaderboard.round_state;
+    const lastUpdated = new Date(leaderboard.last_updated);
+
+    return {
+      name: leaderboard.leaderboard.tournament_name,
+      roundState: `Round ${currentRound} - ${currentRoundState}`,
+      lastUpdated: lastUpdated.toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      }),
+      players: leaderboard.leaderboard.players
+    };
   } catch (error) {
     alert(`Leaderboard Error \n ${error.message}`);
+    return {
+      name: '',
+      roundState: '',
+      lastUpdated: '',
+      players: []
+    };
   }
-
-  const currentRound = leaderboard.leaderboard.current_round;
-  const currentRoundState = leaderboard.leaderboard.round_state;
-  const lastUpdated = new Date(leaderboard.last_updated);
-
-  return {
-    name: leaderboard.leaderboard.tournament_name,
-    roundState: `Round ${currentRound} - ${currentRoundState}`,
-    lastUpdated: lastUpdated.toLocaleString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric'
-    }),
-    players: leaderboard.leaderboard.players
-  };
 }
 
 async function getTeams(leaderboardPlayers) {

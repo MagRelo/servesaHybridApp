@@ -9,6 +9,7 @@ import './index.css';
 
 import LandingPage from 'components/landingPage';
 import teamPage from 'components/teamPage';
+import updateTourney from 'components/updateTourney';
 // import Auto from 'components/autoPage';
 
 class App extends Component {
@@ -20,6 +21,7 @@ class App extends Component {
         <div className="container">
           <Switch>
             <Route component={teamPage} path="/team/:teamName" />
+            <Route component={updateTourney} path="/admin" />
             <Route component={LandingPage} />
           </Switch>
         </div>
