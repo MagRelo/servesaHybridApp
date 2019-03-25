@@ -26,7 +26,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server/index.js",
-    "dev": "NODE_ENV=development nodemon --inspect server/index.js"
+    "dev": "NODE_ENV=development nodemon --inspect server/index.js",
+    "docker-build": "docker build . -t magrelo/golf-page",
+    "docker-push": "docker push magrelo/golf-page",
+    "ssh": "ssh root@209.97.154.109"
   },
   "devDependencies": {
     "nodemon": "^1.18.6"
