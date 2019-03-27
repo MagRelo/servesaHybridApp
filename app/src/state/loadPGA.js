@@ -26,36 +26,34 @@ export async function loadLeaderboard() {
 }
 
 async function getLeaderboard() {
-  let leaderboard = null;
-
   try {
     // get tournament ID from server
     const tournamentData = await fetch('/api/data').then(async response => {
       if (response.status !== 200) throw Error('API error - request');
       return response.json();
     });
-
     if (!tournamentData.tournamentId) throw Error('API error - data');
-
     console.log('Tournament Code:', tournamentData.tournamentId);
 
     // get leaderboard
-    leaderboard = await fetch(
+    let leaderboard = await fetch(
       `https://statdata.pgatour.com/r/${
         tournamentData.tournamentId
       }/2019/leaderboard-v2.json`
     ).then(response => {
-      if (response.status === 200) {
-        return response.json();
+      if (response.status !== 200) {
+        throw Error('Leaderboard error: ' + response.status);
       }
+      return response.json();
     });
 
+    const name = leaderboard.leaderboard.tournament_name;
     const currentRound = leaderboard.leaderboard.current_round;
     const currentRoundState = leaderboard.leaderboard.round_state;
     const lastUpdated = new Date(leaderboard.last_updated);
 
     return {
-      name: leaderboard.leaderboard.tournament_name,
+      name: name,
       roundState: `Round ${currentRound} - ${currentRoundState}`,
       lastUpdated: lastUpdated.toLocaleString('en-US', {
         weekday: 'short',
@@ -82,9 +80,10 @@ async function getTeams(leaderboardPlayers) {
     const allPlayers = await fetch(
       'https://statdata.pgatour.com/players/player.json'
     ).then(response => {
-      if (response.status === 200) {
-        return response.json();
+      if (response.status !== 200) {
+        throw Error('Player error: ' + response.status);
       }
+      return response.json();
     });
 
     // merge scores into teams and get totals
